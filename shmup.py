@@ -18,6 +18,9 @@ import sys
 import os
 # imports parser for command line arguments in sys.argv
 import getopt
+# random will be useful for lots of things, as position where enemies will be
+# placed
+import random as Random
 # imports all the available pygame modules
 import pygame
 # puts set of constants and functions very handy into the global namespace
@@ -32,6 +35,108 @@ music_dir = os.path.join(data_dir, "music")
 
 # DEBUG enable debug output
 DEBUG = True
+
+
+class GameObject(pygame.sprite.Sprite):
+    """
+    Base class that represents all the objects in game.
+    It inherits from Sprite and has a rect that makes easy to move the image
+    """
+    def __init__(self, image, position, speed = None):
+        """
+        Load the object image, create a rect, set position and
+        speed (static by default).
+        """
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.image.load(os.path.join(images_dir, image))
+        self.rect = self.image.get_rect()
+        screen = pygame.display.get_surface()
+        self.area = screen.get_rect()
+
+        self.set_pos(position)
+        self.set_speed(speed or (0,0))
+
+    def update(self, dt):
+        """
+        Updates the position and destroy the object if it's out of the screen
+        """
+        move_speed = (self.speed[0] * dt / 16, self.speed[1] * dt / 16)
+        self.rect = self.rect.move(move_speed)
+        if (self.rect.right < self.area.left) or \
+            (self.rect.bottom < self.area.top) or \
+            (self.rect.top > self.area.bottom):
+            self.kill()
+
+    def get_speed(self):
+        """
+        Return object speed
+        """
+        return self.speed
+
+    def set_speed(self, speed):
+        """
+        Set object speed
+        """
+        self.speed = speed
+
+    def get_pos(self):
+        """
+        Return object position
+        """
+        return (self.rect.center[0],
+                self.rect.center[1])
+
+    def set_pos(self,pos):
+        """
+        Set object position
+        """
+        self.rect.center = (pos[0], pos[1])
+
+    def get_size(self):
+        """
+        Get image size
+        """
+        return self.image.get_size()
+
+
+class Actor(GameObject):
+    """
+    Base class for all characters
+    """
+    def __init__(self, position, life=1, speed=[0,0], image=None):
+        """
+        Set acceleration and image
+        """
+        self.acceleration = [3,3]
+        GameObject.__init__(self, image, position, speed)
+        self.set_life(life)
+
+    def get_life(self):
+        """
+        Return the enemy's life
+        """
+        return self.life
+
+    def set_life(self, life):
+        """
+        Set the character's life
+        """
+        self.life = life
+
+
+class Enemy(Actor):
+    """
+    Class for enemy characters
+    """
+    def __init__(self, position, life=1, speed=None, image=None):
+        """
+        Creates an enemy character
+        """
+        if not image:
+            image = "enemy.png"
+        if DEBUG:
+            print "Enemy created at " + str(position)
+        Actor.__init__(self, position, life, speed, image)
 
 
 class Background:
@@ -93,12 +198,12 @@ class Game:
     screen = None
     screen_size = None
     run = True
+    actors_list = None
 
     def __init__(self, size, fullscreen):
         """
         Starts pygamge, defines resolution, sets caption, disable mouse cursor.
         """
-        actors = {}
         # initialize all needed pygame modules
         pygame.init()
         flags = DOUBLEBUF
@@ -127,10 +232,40 @@ class Game:
                 self.run = False
 
     def actors_update(self, dt):
+        """
+        Updates actors and background
+        """
         self.background.update(dt)
 
+        for actor in self.actors_list.values():
+            actor.update(dt)
+
     def actors_draw(self):
+        """
+        Draw actors and background
+        """
         self.background.draw(self.screen)
+
+        for actor in self.actors_list.values():
+            actor.draw(self.screen)
+
+    def create_enemies(self):
+        """
+        Creates enemies randomly at random positions
+        """
+        r = Random.randint(0,100)
+        # the bigger the multiplier, harder to create a new enemy
+        # 100 / multiplier is the max of enemies on the screen at the same time
+        multiplier = 20
+        if (r > (multiplier * len(self.actors_list["enemies"]))):
+            enemy = Enemy([0, 0])
+            size = enemy.get_size()
+            y = Random.randint(size[1] / 2, self.screen_size[1] - size[1] / 2)
+            pos = [self.screen_size[0] + size[0] / 2, y]
+            enemy.set_pos(pos)
+            enemy.set_speed([-4,0])
+            # add sprite to group
+            self.actors_list["enemies"].add(enemy)
 
     def loop(self):
         """
@@ -143,6 +278,11 @@ class Game:
         clock = pygame.time.Clock()
         dt = 16
 
+        # RenderPlain is a container class for many Sprites
+        self.actors_list = {
+            "enemies" : pygame.sprite.RenderPlain(),
+        }
+
         while self.run:
             clock.tick(1000/dt)
 
@@ -150,6 +290,8 @@ class Game:
             self.handle_events()
             # update all the game elements
             self.actors_update(dt)
+            # create enemies
+            self.create_enemies()
             # draw the elements to the back buffer
             self.actors_draw()
             # flip the front and back buffer
