@@ -1,0 +1,16 @@
+CODE LAYOUT
+
+ * Use 4 spaces per indentation level
+ * Use spaces only (don't mix tabs, please)
+ * All lines limited to a maximun of 80 characters
+ * Encoding: UTF-8
+ * Imports should be on separete lines
+ * Avoid extraneous whitespaces inside parentheses, brackets or braces,
+   before the open parentheses, immediately befora a comma, semicolon,
+   or colon
+ * Avoid more than one space around assignment operator to align it with
+   another
+ * Document everything
+ * Add your name and email to AUTHORS and to any files you've edited
+
+ Good Hacking
