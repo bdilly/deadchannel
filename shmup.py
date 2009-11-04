@@ -123,6 +123,51 @@ class Actor(GameObject):
         """
         self.life = life
 
+    def do_collision(self):
+        """
+        Kill object if life reaches 0 when colliding
+        """
+        if self.get_life() == 0:
+            self.kill()
+        else:
+            self.set_life(self.get_life() -1)
+        if DEBUG:
+            print "Collision detected. Life remaining: " + str(self.get_life())
+
+    def is_dead(self):
+        """
+        Return true if the object's life reached 0
+        """
+        return self.get_life() == 0
+
+    def accel_top(self):
+        """
+        Reduce vertical speed
+        """
+        speed = self.get_speed()
+        self.set_speed((speed[0], speed[1] - self.acceleration[1]))
+
+    def accel_bottom(self):
+        """
+        Increase vertical speed
+        """
+        speed = self.get_speed()
+        self.set_speed((speed[0], speed[1] + self.acceleration[1]))
+
+    def accel_left(self):
+        """
+        Reduce horizontal speed
+        """
+        speed = self.get_speed()
+        self.set_speed((speed[0] - self.acceleration[0], speed[1]))
+
+    def accel_right(self):
+        """
+        Increase horizontal speed
+        """
+        speed = self.get_speed()
+        self.set_speed((speed[0] + self.acceleration[0], speed[1]))
+
 
 class Enemy(Actor):
     """
@@ -134,9 +179,67 @@ class Enemy(Actor):
         """
         if not image:
             image = "enemy.png"
-        if DEBUG:
-            print "Enemy created at " + str(position)
         Actor.__init__(self, position, life, speed, image)
+
+
+class Player(Actor):
+    """
+    Represents the player avatar.
+    """
+    def __init__(self, position, life=10, image=None):
+        """
+        Initialize object, setting position, life, xp, gold
+        """
+        if not image:
+            image = "player.png"
+        Actor.__init__(self, position, life, [0, 0], image)
+        self.set_xp(0)
+        self.set_gold(0)
+
+    def update(self, dt):
+        """
+        Override GameObjecte update()
+        Keep the player inside the screen instead of killing it
+        """
+        move_speed = (self.speed[0] * dt / 16,
+                      self.speed[1] * dt / 16)
+        self.rect = self.rect.move(move_speed)
+
+        if (self.rect.right > self.area.right):
+            self.rect.right = self.area.right
+
+        elif (self.rect.left < 0):
+            self.rect.left = 0
+
+        if (self.rect.bottom > self.area.bottom):
+            self.rect.bottom = self.area.bottom
+
+        elif (self.rect.top < 0):
+            self.rect.top = 0
+
+    def get_xp(self):
+        """
+        Return experience points
+        """
+        return self.xp
+
+    def set_xp(self, xp):
+        """
+        Set experience points
+        """
+        self.xp = xp
+
+    def get_gold(self):
+        """
+        Return gold
+        """
+        return self.gold
+
+    def set_gold(self, gold):
+        """
+        Set gold
+        """
+        self.gold = gold
 
 
 class Background:
@@ -184,8 +287,6 @@ class Background:
         # when it reaches the end, moves the background for the start point
         if (self.pos[0] < -self.size[0]):
             self.pos[0] += self.size[0]
-        if DEBUG:
-            print "BACKGROUND POSITION: " + str(self.pos[0])
 
     def draw(self,screen):
         """
@@ -199,6 +300,7 @@ class Game:
     screen_size = None
     run = True
     actors_list = None
+    player = None
 
     def __init__(self, size, fullscreen):
         """
@@ -222,14 +324,36 @@ class Game:
         """
         Handle user's events.
         """
+        player = self.player
+
         for event in pygame.event.get():
             type = event.type
             if type in (KEYDOWN, KEYUP):
                 key = event.key
             if type == QUIT:
                 self.run = False
-            elif type == KEYDOWN and key == K_ESCAPE:
-                self.run = False
+
+            elif type == KEYDOWN:
+                if key == K_ESCAPE:
+                    self.run = False
+                elif key == K_UP:
+                    player.accel_top()
+                elif key == K_DOWN:
+                    player.accel_bottom()
+                elif key == K_RIGHT:
+                    player.accel_right()
+                elif key == K_LEFT:
+                    player.accel_left()
+
+            elif type == KEYUP:
+                if key == K_DOWN:
+                    player.accel_top()
+                elif key == K_UP:
+                    player.accel_bottom()
+                elif key == K_LEFT:
+                    player.accel_right()
+                elif key == K_RIGHT:
+                    player.accel_left()
 
     def actors_update(self, dt):
         """
@@ -248,6 +372,35 @@ class Game:
 
         for actor in self.actors_list.values():
             actor.draw(self.screen)
+
+    def actor_check_hit(self, actor, actors_list, action):
+        """
+        Check if an actor hitted in others provided by a list. If it does,
+        call action.
+        """
+        # check if the actor is instance of a group of sprites
+        if isinstance(actor, pygame.sprite.RenderPlain):
+            hitted = pygame.sprite.groupcollide(actor, actors_list, 1, 0)
+            for v in hitted.values():
+                for o in v:
+                    action(o)
+            return hitted
+
+        # check if the actor is a sprite
+        elif isinstance(actor, pygame.sprite.Sprite):
+            if pygame.sprite.spritecollide(actor, actors_list, 1):
+                action()
+            return actor.is_dead()
+
+    def actors_act(self):
+        """
+        Check for hits and if the player is dead.
+        """
+        self.actor_check_hit(self.player, self.actors_list["enemies"],
+                             self.player.do_collision)
+        if self.player.is_dead():
+            self.run = False
+            return
 
     def create_enemies(self):
         """
@@ -278,9 +431,13 @@ class Game:
         clock = pygame.time.Clock()
         dt = 16
 
+        # the player starts from the left center point of the screen
+        pos = [0, self.screen_size[1] / 2]
+        self.player = Player(pos, life=5)
         # RenderPlain is a container class for many Sprites
         self.actors_list = {
             "enemies" : pygame.sprite.RenderPlain(),
+            "player": pygame.sprite.RenderPlain(self.player),
         }
 
         while self.run:
@@ -290,6 +447,7 @@ class Game:
             self.handle_events()
             # update all the game elements
             self.actors_update(dt)
+            self.actors_act()
             # create enemies
             self.create_enemies()
             # draw the elements to the back buffer
