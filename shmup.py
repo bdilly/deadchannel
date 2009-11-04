@@ -48,7 +48,7 @@ class GameObject(pygame.sprite.Sprite):
         speed (static by default).
         """
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load(os.path.join(images_dir, image))
+        self.image = image
         self.rect = self.image.get_rect()
         screen = pygame.display.get_surface()
         self.area = screen.get_rect()
@@ -177,8 +177,6 @@ class Enemy(Actor):
         """
         Creates an enemy character
         """
-        if not image:
-            image = "enemy.png"
         Actor.__init__(self, position, life, speed, image)
 
 
@@ -190,8 +188,6 @@ class Player(Actor):
         """
         Initialize object, setting position, life, xp, gold
         """
-        if not image:
-            image = "player.png"
         Actor.__init__(self, position, life, [0, 0], image)
         self.set_xp(0)
         self.set_gold(0)
@@ -255,9 +251,13 @@ class Background:
         """
         # sets the absolute path
         image = os.path.join(images_dir, image)
-        # convert the image so it won't be done every blit
+        # loads the image
+        image = pygame.image.load(image)
+        # disables alpha
+        image.set_alpha(None, RLEACCEL)
+        # converts the image so it won't be done every blit
         # it improves the performance
-        image = pygame.image.load(image).convert()
+        image = image.convert()
         self.size = image.get_size()
         self.pos = [0, 0]
         screen = pygame.display.get_surface()
@@ -319,6 +319,25 @@ class Game:
         pygame.mouse.set_visible(0)
         # change the title windows to "schump++"
         pygame.display.set_caption('schmup++');
+
+        # load all images TODO: it could display a "loading" screen
+        self.load_images()
+
+    def load_images(self):
+        """
+        Load all image files and convert, setting the colorkey
+        """
+        def load_image(filename):
+            img = pygame.image.load(os.path.join(images_dir, filename))
+            # disable alpha, it the image contains an alpha layer
+            img.set_alpha(None, RLEACCEL)
+            img = img.convert()
+            # colorkey is the color value that will be reference transparency
+            img.set_colorkey((255,255,255), RLEACCEL)
+            return img
+
+        self.image_player = load_image("player.png")
+        self.image_enemy = load_image("enemy.png")
 
     def handle_events(self):
         """
@@ -411,12 +430,11 @@ class Game:
         # 100 / multiplier is the max of enemies on the screen at the same time
         multiplier = 20
         if (r > (multiplier * len(self.actors_list["enemies"]))):
-            enemy = Enemy([0, 0])
+            enemy = Enemy([0, 0], 1, [-4, 0], self.image_enemy)
             size = enemy.get_size()
             y = Random.randint(size[1] / 2, self.screen_size[1] - size[1] / 2)
             pos = [self.screen_size[0] + size[0] / 2, y]
             enemy.set_pos(pos)
-            enemy.set_speed([-4,0])
             # add sprite to group
             self.actors_list["enemies"].add(enemy)
 
@@ -433,7 +451,7 @@ class Game:
 
         # the player starts from the left center point of the screen
         pos = [0, self.screen_size[1] / 2]
-        self.player = Player(pos, life=5)
+        self.player = Player(pos, 5, self.image_player)
         # RenderPlain is a container class for many Sprites
         self.actors_list = {
             "enemies" : pygame.sprite.RenderPlain(),
