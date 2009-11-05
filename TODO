@@ -1,3 +1,11 @@
-add player rotation
+add player rotation (mouse input)
+include secondary weapons
+implement charging weapon feature (when the player holds the fire key)
+handle joystick input
+parse xml to populate levels
+implement enemies behaviour (AI)
 add hud layer
+include audio and music
+add loading screen
+create menus
 improve help output and readme file
