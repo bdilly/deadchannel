@@ -99,6 +99,16 @@ class GameObject(pygame.sprite.Sprite):
         return self.image.get_size()
 
 
+class Bullet(GameObject):
+    """
+    Class for bullets.
+    """
+    def __init__(self, position, speed=None, image=None, list=None):
+        GameObject.__init__( self, image, position, speed )
+        if list != None:
+            self.add( list )
+
+
 class Actor(GameObject):
     """
     Base class for all characters
@@ -167,6 +177,16 @@ class Actor(GameObject):
         """
         speed = self.get_speed()
         self.set_speed((speed[0] + self.acceleration[0], speed[1]))
+
+    def fire(self, fire_list, image):
+        """
+        Fire a bullet in the same position with double speed.
+        """
+        # create a list with speed in axis x and y
+        speed = list(self.get_speed())
+        # double horizontal speed
+        speed[0] *= 2
+        Bullet(self.get_pos(), speed, image, fire_list)
 
 
 class Enemy(Actor):
@@ -237,6 +257,13 @@ class Player(Actor):
         """
         self.gold = gold
 
+    def fire(self, fire_list, image):
+        """
+        Fire a bullet with double speed
+        """
+        pos = self.get_pos()
+        Bullet(pos, [8, 0], image, fire_list)
+
 
 class Background:
     """
@@ -301,6 +328,7 @@ class Game:
     run = True
     actors_list = None
     player = None
+    interval = 0
 
     def __init__(self, size, fullscreen):
         """
@@ -337,7 +365,9 @@ class Game:
             return img
 
         self.image_player = load_image("player.png")
+        self.image_player_fire = load_image("player_fire.png")
         self.image_enemy = load_image("enemy.png")
+        self.image_enemy_fire = load_image("enemy_fire.png")
 
     def handle_events(self):
         """
@@ -355,6 +385,10 @@ class Game:
             elif type == KEYDOWN:
                 if key == K_ESCAPE:
                     self.run = False
+                elif key == K_SPACE:
+                    self.interval = 0
+                    player.fire(self.actors_list["fire"],
+                                self.image_player_fire)
                 elif key == K_UP:
                     player.accel_top()
                 elif key == K_DOWN:
@@ -373,6 +407,13 @@ class Game:
                     player.accel_right()
                 elif key == K_RIGHT:
                     player.accel_left()
+
+            keys = pygame.key.get_pressed()
+            if self.interval > 10:
+                self.interval = 0
+                if keys[K_SPACE]:
+                    player.fire(self.actors_list["fire"],
+                                self.image_player_fire)
 
     def actors_update(self, dt):
         """
@@ -415,16 +456,42 @@ class Game:
         """
         Check for hits and if the player is dead.
         """
+        # check if player was hitted by a bullet
+        self.actor_check_hit(self.player, self.actors_list["enemies_fire"],
+                             self.player.do_collision)
+        if self.player.is_dead():
+            self.run = False
+            return
+
+        # check if the player collided with an enemy
         self.actor_check_hit(self.player, self.actors_list["enemies"],
                              self.player.do_collision)
         if self.player.is_dead():
             self.run = False
             return
 
-    def create_enemies(self):
+        # check if enemies were hitted by a bullet
+        hitted = self.actor_check_hit(self.actors_list["fire"],
+                                      self.actors_list["enemies"],
+                                          Enemy.do_collision)
+
+        # increase xp based on hits
+        self.player.set_xp(self.player.get_xp() + len(hitted))
+
+    def manage_enemies(self):
         """
-        Creates enemies randomly at random positions
+        Creates enemies randomly at random positions and randomly fire
         """
+        self.ticks += 1
+        # enemies fire randomly
+        if self.ticks > Random.randint(20,30):
+            for enemy in self.actors_list["enemies"].sprites():
+                if Random.randint(0,10) > 5:
+                    enemy.fire(self.actors_list["enemies_fire"],
+                               self.image_enemy_fire)
+                self.ticks = 0
+
+        # creates enemies randomly
         r = Random.randint(0,100)
         # the bigger the multiplier, harder to create a new enemy
         # 100 / multiplier is the max of enemies on the screen at the same time
@@ -448,6 +515,7 @@ class Game:
         #starts clock
         clock = pygame.time.Clock()
         dt = 16
+        self.ticks = 0
 
         # the player starts from the left center point of the screen
         pos = [0, self.screen_size[1] / 2]
@@ -455,7 +523,9 @@ class Game:
         # RenderPlain is a container class for many Sprites
         self.actors_list = {
             "enemies" : pygame.sprite.RenderPlain(),
+            "enemies_fire" : pygame.sprite.RenderPlain(),
             "player": pygame.sprite.RenderPlain(self.player),
+            "fire" : pygame.sprite.RenderPlain(),
         }
 
         while self.run:
@@ -467,7 +537,7 @@ class Game:
             self.actors_update(dt)
             self.actors_act()
             # create enemies
-            self.create_enemies()
+            self.manage_enemies()
             # draw the elements to the back buffer
             self.actors_draw()
             # flip the front and back buffer
