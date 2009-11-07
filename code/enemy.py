@@ -12,13 +12,35 @@
 
 from actor import Actor
 
+class Callable:
+    """
+    Wrapper to class-method
+    """
+    def __init__(self, anycallable):
+        self.__call__ = anycallable
+
 class Enemy(Actor):
     """
     Class for enemy characters
     """
-    def __init__(self, position, life=1, speed=None, image=None):
+    def __init__(self, position, life=1, behaviour="normal", image=None):
         """
-        Creates an enemy character
+        Creates an enemy character that could has one of the following
+        behaves: normal, fast, or diagonal.
         """
+        if behaviour == "normal":
+            speed = [-4, 0]
+        elif behaviour == "fast":
+            speed = [-7, 0]
+        elif behaviour == "diagonal":
+            speed = [-3, 1]
+
         Actor.__init__(self, position, life, speed, image)
+
+    def get_behaviours():
+        """
+        Returns a list with all the possible behaviours
+        """
+        return ["normal", "fast", "diagonal"]
+    get_behaviours = Callable(get_behaviours)
 

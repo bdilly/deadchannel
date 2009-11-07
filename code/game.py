@@ -206,7 +206,9 @@ class Game:
         # 100 / multiplier is the max of enemies on the screen at the same time
         multiplier = 20
         if (r > (multiplier * len(self.actors_list["enemies"]))):
-            enemy = Enemy([0, 0], 1, [-4, 0], self.image_enemy)
+            # chooses one between the possible behaviours
+            behaviour = Random.choice(Enemy.get_behaviours())
+            enemy = Enemy([0, 0], 1, behaviour, self.image_enemy)
             size = enemy.get_size()
             y = Random.randint(size[1] / 2, self.screen_size[1] - size[1] / 2)
             pos = [self.screen_size[0] + size[0] / 2, y]
