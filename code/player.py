@@ -19,11 +19,10 @@ class Player(Actor):
     """
     def __init__(self, position, life=10, image=None):
         """
-        Initialize object, setting position, life, xp, gold
+        Initialize object, setting position, life, xp.
         """
         Actor.__init__(self, position, life, [0, 0], image)
         self.set_xp(0)
-        self.set_gold(0)
 
     def update(self, dt):
         """
@@ -57,18 +56,6 @@ class Player(Actor):
         Set experience points
         """
         self.xp = xp
-
-    def get_gold(self):
-        """
-        Return gold
-        """
-        return self.gold
-
-    def set_gold(self, gold):
-        """
-        Set gold
-        """
-        self.gold = gold
 
     def fire(self, fire_list, image):
         """

@@ -19,9 +19,11 @@ import pygame
 # puts set of constants and functions very handy into the global namespace
 # of our script
 from pygame.locals import *
+# game modules
 from background import Background
 from player import Player
 from enemy import Enemy
+from hud import HUD
 
 class Game:
     screen = None
@@ -69,6 +71,7 @@ class Game:
         self.image_player_fire = load_image("player_fire.png")
         self.image_enemy = load_image("enemy.png")
         self.image_enemy_fire = load_image("enemy_fire.png")
+        self.image_life = load_image("life.png")
 
     def handle_events(self):
         """
@@ -125,6 +128,8 @@ class Game:
         for actor in self.actors_list.values():
             actor.update(dt)
 
+        self.hud.update(dt)
+
     def actors_draw(self):
         """
         Draw actors and background
@@ -133,6 +138,9 @@ class Game:
 
         for actor in self.actors_list.values():
             actor.draw(self.screen)
+
+        # draw the hud after all the actors, so it will be at the top
+        self.hud.draw(self.screen)
 
     def actor_check_hit(self, actor, actors_list, action):
         """
@@ -217,10 +225,13 @@ class Game:
         clock = pygame.time.Clock()
         dt = 16
         self.ticks = 0
+        self.interval = 1
 
         # the player starts from the left center point of the screen
         pos = [0, self.screen_size[1] / 2]
         self.player = Player(pos, 5, self.image_player)
+
+        self.hud = HUD(self.player, [20, 30], self.image_life)
         # RenderPlain is a container class for many Sprites
         self.actors_list = {
             "enemies" : pygame.sprite.RenderPlain(),
