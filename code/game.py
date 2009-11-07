@@ -46,8 +46,8 @@ class Game:
 
         # make mouse cursor invisible
         pygame.mouse.set_visible(0)
-        # change the title windows to "schump++"
-        pygame.display.set_caption('schmup++');
+        # change the title windows to "deadchannel"
+        pygame.display.set_caption('deadchannel');
 
         # load all images TODO: it could display a "loading" screen
         self.load_images()
