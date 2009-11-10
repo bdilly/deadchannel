@@ -16,8 +16,10 @@ class Bullet(GameObject):
     """
     Class for bullets.
     """
-    def __init__(self, position, speed=None, image=None, list=None):
-        GameObject.__init__( self, image, position, speed )
+    def __init__(self, position, speed=None, rotation=0, rotation_speed=0,
+                 image=None, list=None):
+        GameObject.__init__(self, image, position, rotation, speed,
+                            rotation_speed)
         if list != None:
-            self.add( list )
+            self.add(list)
 

@@ -32,6 +32,15 @@ class Game:
     actors_list = None
     player = None
     interval = 0
+    # if false, use keys to rotate the player. otherwise use analogic input
+    analogic = False
+    keys_up = [K_UP, K_w]
+    keys_down = [K_DOWN, K_s]
+    keys_right = [K_RIGHT, K_d]
+    keys_left = [K_LEFT, K_a]
+    keys_fire = [K_SPACE]
+    keys_rot_clock = [K_e]
+    keys_rot_anti_clock = [K_q]
 
     def __init__(self, size, fullscreen):
         """
@@ -67,7 +76,11 @@ class Game:
             img.set_colorkey((255,255,255), RLEACCEL)
             return img
 
-        self.image_player = load_image("player.png")
+        self.image_player = []
+        for image in ["player_0.png", "player_45.png", "player_90.png",
+                      "player_135.png", "player_180.png", "player_225.png",
+                      "player_270.png", "player_315.png"]:
+            self.image_player.append(load_image(image))
         self.image_player_fire = load_image("player_fire.png")
         self.image_enemy = load_image("enemy.png")
         self.image_enemy_fire = load_image("enemy_fire.png")
@@ -89,35 +102,48 @@ class Game:
             elif type == KEYDOWN:
                 if key == K_ESCAPE:
                     self.run = False
-                elif key == K_SPACE:
-                    self.interval = 0
-                    player.fire(self.actors_list["fire"],
-                                self.image_player_fire)
-                elif key == K_UP:
+                elif key in self.keys_up:
                     player.accel_top()
-                elif key == K_DOWN:
+                elif key in self.keys_down:
                     player.accel_bottom()
-                elif key == K_RIGHT:
+                elif key in self.keys_right:
                     player.accel_right()
-                elif key == K_LEFT:
+                elif key in self.keys_left:
                     player.accel_left()
+                elif not self.analogic:
+                    if key in self.keys_fire:
+                        self.interval = 0
+                        player.fire(self.actors_list["fire"],
+                                    self.image_player_fire)
+                    elif key in self.keys_rot_clock:
+                        player.rotate_clock()
+                    elif key in self.keys_rot_anti_clock:
+                        player.rotate_anti_clock()
 
             elif type == KEYUP:
-                if key == K_DOWN:
+                if key in self.keys_down:
                     player.accel_top()
-                elif key == K_UP:
+                elif key in self.keys_up:
                     player.accel_bottom()
-                elif key == K_LEFT:
+                elif key in self.keys_left:
                     player.accel_right()
-                elif key == K_RIGHT:
+                elif key in self.keys_right:
                     player.accel_left()
+                elif not self.analogic:
+                    if key in self.keys_rot_clock:
+                        player.rotate_anti_clock()
+                    elif key in self.keys_rot_anti_clock:
+                        player.rotate_clock()
 
-            keys = pygame.key.get_pressed()
-            if self.interval > 10:
-                self.interval = 0
-                if keys[K_SPACE]:
-                    player.fire(self.actors_list["fire"],
-                                self.image_player_fire)
+            if not self.analogic:
+                keys = pygame.key.get_pressed()
+                if self.interval > 10:
+                    self.interval = 0
+                    for key in keys:
+                        if key in self.keys_fire:
+                            player.fire(self.actors_list["fire"],
+                                        self.image_player_fire)
+
 
     def actors_update(self, dt):
         """
@@ -208,7 +234,7 @@ class Game:
         if (r > (multiplier * len(self.actors_list["enemies"]))):
             # chooses one between the possible behaviours
             behaviour = Random.choice(Enemy.get_behaviours())
-            enemy = Enemy([0, 0], 1, behaviour, self.image_enemy)
+            enemy = Enemy([0, 0], 270, 1, behaviour, 0, self.image_enemy)
             size = enemy.get_size()
             y = Random.randint(size[1] / 2, self.screen_size[1] - size[1] / 2)
             pos = [self.screen_size[0] + size[0] / 2, y]
@@ -231,7 +257,7 @@ class Game:
 
         # the player starts from the left center point of the screen
         pos = [0, self.screen_size[1] / 2]
-        self.player = Player(pos, 5, self.image_player)
+        self.player = Player(pos, life=10, image=self.image_player)
 
         self.hud = HUD(self.player, [20, 30], self.image_life)
         # RenderPlain is a container class for many Sprites
