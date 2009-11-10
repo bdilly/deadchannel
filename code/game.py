@@ -31,9 +31,8 @@ class Game:
     run = True
     actors_list = None
     player = None
-    interval = 0
     # if false, use keys to rotate the player. otherwise use analogic input
-    analogic = False
+    analogic = True
     keys_up = [K_UP, K_w]
     keys_down = [K_DOWN, K_s]
     keys_right = [K_RIGHT, K_d]
@@ -41,6 +40,8 @@ class Game:
     keys_fire = [K_SPACE]
     keys_rot_clock = [K_e]
     keys_rot_anti_clock = [K_q]
+    mouse_sensitivity = .6
+    rot_accel = 2
 
     def __init__(self, size, fullscreen):
         """
@@ -56,7 +57,9 @@ class Game:
         self.screen_size = self.screen.get_size()
 
         # make mouse cursor invisible
-        pygame.mouse.set_visible(0)
+        pygame.mouse.set_visible(False)
+        # grabs the mouse, so pygame has complete control over it
+        pygame.event.set_grab(True)
         # change the title windows to "deadchannel"
         pygame.display.set_caption('deadchannel');
 
@@ -96,6 +99,10 @@ class Game:
             type = event.type
             if type in (KEYDOWN, KEYUP):
                 key = event.key
+            if type in (MOUSEBUTTONUP, MOUSEBUTTONDOWN):
+                button = event.button
+            if type == MOUSEMOTION:
+                mouse_rel = event.rel
             if type == QUIT:
                 self.run = False
 
@@ -112,13 +119,12 @@ class Game:
                     player.accel_left()
                 elif not self.analogic:
                     if key in self.keys_fire:
-                        self.interval = 0
                         player.fire(self.actors_list["fire"],
                                     self.image_player_fire)
                     elif key in self.keys_rot_clock:
-                        player.rotate_clock()
+                        player.rotate_clock(self.rot_accel)
                     elif key in self.keys_rot_anti_clock:
-                        player.rotate_anti_clock()
+                        player.rotate_clock(-self.rot_accel)
 
             elif type == KEYUP:
                 if key in self.keys_down:
@@ -131,18 +137,29 @@ class Game:
                     player.accel_left()
                 elif not self.analogic:
                     if key in self.keys_rot_clock:
-                        player.rotate_anti_clock()
+                        player.rotate_clock(-self.rot_accel)
                     elif key in self.keys_rot_anti_clock:
-                        player.rotate_clock()
+                        player.rotate_clock(self.rot_accel)
 
-            if not self.analogic:
-                keys = pygame.key.get_pressed()
-                if self.interval > 10:
-                    self.interval = 0
-                    for key in keys:
-                        if key in self.keys_fire:
-                            player.fire(self.actors_list["fire"],
-                                        self.image_player_fire)
+            elif type == MOUSEBUTTONDOWN and self.analogic:
+                # mouse left button is 1, middle is 2, and right is 3
+                if button == 1:
+                    player.fire(self.actors_list["fire"],
+                                self.image_player_fire)
+
+            elif type == MOUSEMOTION and self.analogic:
+                # rel is a tuple with x and y relative movements
+                # if player move the cursor down or left, it has the same
+                # effect
+                #FIXME HACK: the first rel is a huge number, the difference
+                # between 0, 0 and the curson position. So it needs to be
+                # avoided. This hack should be removed after we include
+                # screens before the game screen
+                if mouse_rel[0] < 100 and mouse_rel[1] < 100:
+                    rot = player.get_rotation()
+                    rot = rot + int((mouse_rel[0] + mouse_rel[1]) *\
+                                     self.mouse_sensitivity)
+                    player.set_rotation(rot)
 
 
     def actors_update(self, dt):
@@ -253,7 +270,6 @@ class Game:
         clock = pygame.time.Clock()
         dt = 16
         self.ticks = 0
-        self.interval = 1
 
         # the player starts from the left center point of the screen
         pos = [0, self.screen_size[1] / 2]

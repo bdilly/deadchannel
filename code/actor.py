@@ -23,7 +23,6 @@ class Actor(GameObject):
         Set acceleration and image
         """
         self.acceleration = [3,3]
-        self.rot_acceleration = 2
         GameObject.__init__(self, image, position, rotation, speed,
                             rotation_speed)
         self.set_life(life)
@@ -83,13 +82,12 @@ class Actor(GameObject):
         speed = self.get_speed()
         self.set_speed((speed[0] + self.acceleration[0], speed[1]))
 
-    def rotate_clock(self):
+    def rotate_clock(self, rot_accel):
+        """
+        Increase or reduce rotational speed
+        """
         rot_speed = self.get_rotation_speed()
-        self.set_rotation_speed(rot_speed + self.rot_acceleration)
-
-    def rotate_anti_clock(self):
-        rot_speed = self.get_rotation_speed()
-        self.set_rotation_speed(rot_speed - self.rot_acceleration)
+        self.set_rotation_speed(rot_speed + rot_accel)
 
     def fire(self, fire_list, image):
         """
