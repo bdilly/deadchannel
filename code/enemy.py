@@ -23,7 +23,8 @@ class Enemy(Actor):
     """
     Class for enemy characters
     """
-    def __init__(self, position, life=1, behaviour="normal", image=None):
+    def __init__(self, position, rotation=180, life=1, behaviour="normal", rotation_speed=0,
+                 image=None):
         """
         Creates an enemy character that could has one of the following
         behaves: normal, fast, or diagonal.
@@ -35,7 +36,8 @@ class Enemy(Actor):
         elif behaviour == "diagonal":
             speed = [-3, 1]
 
-        Actor.__init__(self, position, life, speed, image)
+        Actor.__init__(self, position, rotation, life, speed,
+                       rotation_speed, image)
 
     def get_behaviours():
         """

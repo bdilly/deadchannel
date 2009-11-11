@@ -17,12 +17,14 @@ class Actor(GameObject):
     """
     Base class for all characters
     """
-    def __init__(self, position, life=1, speed=[0,0], image=None):
+    def __init__(self, position, rotation=270, life=1, speed=[0,0],
+                 rotation_speed=0, image=None):
         """
         Set acceleration and image
         """
         self.acceleration = [3,3]
-        GameObject.__init__(self, image, position, speed)
+        GameObject.__init__(self, image, position, rotation, speed,
+                            rotation_speed)
         self.set_life(life)
 
     def get_life(self):
@@ -80,6 +82,13 @@ class Actor(GameObject):
         speed = self.get_speed()
         self.set_speed((speed[0] + self.acceleration[0], speed[1]))
 
+    def rotate_clock(self, rot_accel):
+        """
+        Increase or reduce rotational speed
+        """
+        rot_speed = self.get_rotation_speed()
+        self.set_rotation_speed(rot_speed + rot_accel)
+
     def fire(self, fire_list, image):
         """
         Fire a bullet in the same position with double speed.
@@ -88,5 +97,5 @@ class Actor(GameObject):
         speed = list(self.get_speed())
         # double horizontal speed
         speed[0] *= 2
-        Bullet(self.get_pos(), speed, image, fire_list)
+        Bullet(self.get_pos(), speed, image=image, list=fire_list)
 

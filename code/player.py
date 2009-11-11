@@ -10,6 +10,7 @@
 # Released under GNU GPL, read the file 'COPYING' for more information
 # ----------------------------------------------------------------------
 
+import math
 from actor import Actor
 from bullet import Bullet
 
@@ -17,11 +18,11 @@ class Player(Actor):
     """
     Represents the player avatar.
     """
-    def __init__(self, position, life=10, image=None):
+    def __init__(self, position, rotation=0, life=10, image=None):
         """
         Initialize object, setting position, life, xp.
         """
-        Actor.__init__(self, position, life, [0, 0], image)
+        Actor.__init__(self, position, rotation, life, [0, 0], 0, image)
         self.set_xp(0)
 
     def update(self, dt):
@@ -29,6 +30,10 @@ class Player(Actor):
         Override GameObjecte update()
         Keep the player inside the screen instead of killing it
         """
+        self.set_rotation(self.get_rotation() + self.get_rotation_speed())
+        if self.images:
+            self.image = self.images[self.rotation * len(self.images) / 360]
+
         move_speed = (self.speed[0] * dt / 16,
                       self.speed[1] * dt / 16)
         self.rect = self.rect.move(move_speed)
@@ -62,5 +67,8 @@ class Player(Actor):
         Fire a bullet with double speed
         """
         pos = self.get_pos()
-        Bullet(pos, [8, 0], image, fire_list)
+        speed = 8
+        x = speed * math.cos(math.radians(self.get_rotation()))
+        y = speed * math.sin(math.radians(self.get_rotation()))
+        Bullet(pos, [x, y], image=image, list=fire_list)
 
