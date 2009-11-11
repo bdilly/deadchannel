@@ -24,6 +24,7 @@ from background import Background
 from player import Player
 from enemy import Enemy
 from hud import HUD
+from fase import Fase
 
 class Game:
     screen = None
@@ -187,6 +188,31 @@ class Game:
         # increase xp based on hits
         self.player.set_xp(self.player.get_xp() + len(hitted))
 
+    def manage_elements(self, fase, counter):
+        """
+        Creates enemies and itens based on the xml parsed file
+        """
+        self.ticks += 1
+        # enemies fire randomly
+        if self.ticks > Random.randint(20,30):
+            for enemy in self.actors_list["enemies"].sprites():
+                if Random.randint(0,10) > 5:
+                    enemy.fire(self.actors_list["enemies_fire"],
+                               self.image_enemy_fire)
+                self.ticks = 0
+
+        # creates enemies based on xml file
+        L = fase.pop(counter)
+        for element in L:
+            # FIX: Create enemies and itens similarly (create a generic class)
+            enemy = Enemy([0, 0], element.life, element.behaviour, self.image_enemy)
+            size = enemy.get_size()
+            y = Random.randint(size[1] / 2, self.screen_size[1] - size[1] / 2)
+            pos = [self.screen_size[0] + size[0] / 2, y]
+            enemy.set_pos(pos)
+            # add sprite to group
+            self.actors_list["enemies"].add(enemy)
+
     def manage_enemies(self):
         """
         Creates enemies randomly at random positions and randomly fire
@@ -242,6 +268,10 @@ class Game:
             "fire" : pygame.sprite.RenderPlain(),
         }
 
+        fase = Fase("fase1.xml")
+	fase.buildStage()
+        counter = 0
+
         while self.run:
             clock.tick(1000/dt)
 
@@ -251,9 +281,13 @@ class Game:
             self.actors_update(dt)
             self.actors_act()
             # create enemies
-            self.manage_enemies()
+            #self.manage_enemies()
+
+            # create enemies based on xml file
+            self.manage_elements(fase, counter)
+
             # draw the elements to the back buffer
             self.actors_draw()
             # flip the front and back buffer
             pygame.display.flip()
-
+            counter += 1
