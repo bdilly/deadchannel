@@ -247,8 +247,12 @@ class Game:
         # creates enemies based on xml file
         L = fase.pop(counter)
         for element in L:
+            # fix: these attributes should be handled by xml parser
+            rot = 270
+            rot_speed = 0
             # FIX: Create enemies and itens similarly (create a generic class)
-            enemy = Enemy([0, 0], element.life, element.behaviour, self.image_enemy)
+            enemy = Enemy([0, 0], rot, element.life, element.behaviour,
+                          rot_speed, self.image_enemy)
             size = enemy.get_size()
             y = Random.randint(size[1] / 2, self.screen_size[1] - size[1] / 2)
             pos = [self.screen_size[0] + size[0] / 2, y]
