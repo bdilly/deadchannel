@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<fase>
+<item>
+	<type>enemy</type>
+	<x>100</x>
+	<y>10</y>
+	<life>1</life>
+	<image>none</image>
+	<behaviour>normal</behaviour>
+	<special>none</special>
+</item>
+<item>
+	<type>enemy</type>
+	<x>200</x>
+	<y>10</y>
+	<life>1</life>
+	<image>none</image>
+	<behaviour>normal</behaviour>
+	<special>none</special>
+</item>
+<item>
+	<type>enemy</type>
+	<x>200</x>
+	<y>10</y>
+	<life>1</life>
+	<image>none</image>
+	<behaviour>normal</behaviour>
+	<special>none</special>
+</item>
+</fase>
