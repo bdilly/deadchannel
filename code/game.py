@@ -25,6 +25,7 @@ from player import Player
 from enemy import Enemy
 from hud import HUD
 from fase import Fase
+from music import Music_player
 
 class Game:
     screen = None
@@ -64,6 +65,8 @@ class Game:
         """
         Starts pygamge, defines resolution, sets caption, disable mouse cursor.
         """
+        # Set mixer arguments before modules initialization
+        pygame.mixer.pre_init(44100)
         # initialize all needed pygame modules
         pygame.init()
         flags = DOUBLEBUF
@@ -78,12 +81,14 @@ class Game:
         # grabs the mouse, so pygame has complete control over it
         pygame.event.set_grab(True)
         # change the title windows to "deadchannel"
-        pygame.display.set_caption('deadchannel');
+        pygame.display.set_caption('deadchannel')
 
         # initialize joysticks
         self.init_joysticks()
         # load all images TODO: it could display a "loading" screen
         self.load_images()
+        # loads music player
+        self.music_player = Music_player()
 
     def init_joysticks(self):
         """
@@ -159,6 +164,13 @@ class Game:
                         player.rotate_clock(self.rot_accel)
                     elif key in self.keys_rot_anti_clock:
                         player.rotate_clock(-self.rot_accel)
+                elif key == K_v:
+                    self.music_player.play()
+                elif key == K_b:
+                    self.music_player.stop()
+                elif key == K_n:
+                    self.music_player.next_track()
+
 
             elif type == KEYUP:
                 if key in self.keys_down:
@@ -234,7 +246,7 @@ class Game:
                 elif button == self.j_bt_rot_anti_clock:
                         player.rotate_clock(self.rot_accel)
 
-    def actors_update(self, dt):
+    def actors_update(self, dt, ms):
         """
         Updates actors and background
         """
@@ -243,7 +255,7 @@ class Game:
         for actor in self.actors_list.values():
             actor.update(dt)
 
-        self.hud.update(dt)
+        self.hud.update(dt, ms)
 
     def actors_draw(self):
         """
@@ -357,16 +369,22 @@ class Game:
         }
 
         fase = Fase("fase1.xml")
-	fase.buildStage()
+        fase.buildStage()
         counter = 0
 
+        # loads next music
+        self.music_player.load_next()
+        # Starts playing music
+        self.music_player.play()
+
         while self.run:
-            clock.tick(1000/dt)
+            # miliseconds since last frame
+            ms = clock.tick(1000/dt)
 
             # handle input
             self.handle_events()
             # update all the game elements
-            self.actors_update(dt)
+            self.actors_update(dt, ms)
             self.actors_act()
 
             # create enemies based on xml file

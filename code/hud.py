@@ -13,6 +13,9 @@
 import pygame
 import copy
 
+# Time that track info will be shown
+TRACK_INFO_TIME = 3000
+
 class HUD:
     """
     HUD (Heads-Up Display) class. It displays info as life and experience
@@ -20,6 +23,7 @@ class HUD:
     """
     last_xp = -1
     image_font = None
+    track_info = None
 
     def __init__(self, player, pos=None, image_life=None):
         """
@@ -36,11 +40,43 @@ class HUD:
         self.image_life = image_life
         self.size_image_life= self.image_life.get_size()
 
-    def update(self, dt):
+    def set_track_info(self, info):
         """
-        This update method doesn't do anything for now.
+        Sets track info
         """
-        pass
+        self.track_info = info
+
+    def show_track_info(self):
+        """
+        Shows the track info for an ammount of time, then fades out
+        """
+        if not self.track_info:
+            return
+        self.showing_track = True
+        self.elapsed_time_showing_track = 0
+
+    def update(self, dt, ms):
+        """
+        Updates HUD animations
+        """
+        if not self.track_info:
+            return
+        info = self.track_info
+        if self.start_showing_track:
+            if self.elapsed_time_showing_track > TRACK_INFO_TIME:
+                self.showing_track = False
+
+    def draw_track_info(self, screen):
+        """
+        Draws currently playing track info
+        """
+        w = screen.get_width()
+        h = screen.get_height()
+        if self.track_info:
+            text = "%s by %s\n%s (%s)" % (info['title'], info['artist'],
+                info['album'], info['date'])
+            self.image_track = self.font.render(text, True, self.fcolor)
+            #pos =
 
     def draw_life(self, screen):
         """
