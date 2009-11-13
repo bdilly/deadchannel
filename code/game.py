@@ -331,35 +331,6 @@ class Game:
             # add sprite to group
             self.actors_list["enemies"].add(enemy)
 
-    def manage_enemies(self):
-        """
-        Creates enemies randomly at random positions and randomly fire
-        """
-        self.ticks += 1
-        # enemies fire randomly
-        if self.ticks > Random.randint(20,30):
-            for enemy in self.actors_list["enemies"].sprites():
-                if Random.randint(0,10) > 5:
-                    enemy.fire(self.actors_list["enemies_fire"],
-                               self.image_enemy_fire)
-                self.ticks = 0
-
-        # creates enemies randomly
-        r = Random.randint(0,100)
-        # the bigger the multiplier, harder to create a new enemy
-        # 100 / multiplier is the max of enemies on the screen at the same time
-        multiplier = 20
-        if (r > (multiplier * len(self.actors_list["enemies"]))):
-            # chooses one between the possible behaviours
-            behaviour = Random.choice(Enemy.get_behaviours())
-            enemy = Enemy([0, 0], 270, 1, behaviour, 0, self.image_enemy)
-            size = enemy.get_size()
-            y = Random.randint(size[1] / 2, self.screen_size[1] - size[1] / 2)
-            pos = [self.screen_size[0] + size[0] / 2, y]
-            enemy.set_pos(pos)
-            # add sprite to group
-            self.actors_list["enemies"].add(enemy)
-
     def loop(self):
         """
         Main loop
@@ -397,8 +368,6 @@ class Game:
             # update all the game elements
             self.actors_update(dt)
             self.actors_act()
-            # create enemies
-            #self.manage_enemies()
 
             # create enemies based on xml file
             self.manage_elements(fase, counter)
