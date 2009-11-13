@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<fase>
+<item>
+	<type>enemy</type>
+	<x>100</x>
+	<y>40</y>
+	<rot>7</rot>
+	<rotspeed>2</rotspeed>
+	<life>1</life>
+	<image>none</image>
+	<behaviour>normal</behaviour>
+	<special>none</special>
+</item>
+<item>
+	<type>enemy</type>
+	<x>200</x>
+	<y>388</y>
+	<rot>20</rot>
+	<rotspeed>20</rotspeed>
+	<life>1</life>
+	<image>none</image>
+	<behaviour>normal</behaviour>
+	<special>none</special>
+</item>
+<item>
+	<type>enemy</type>
+	<x>200</x>
+	<y>200</y>
+	<rot>40</rot>
+	<rotspeed>0</rotspeed>
+	<life>1</life>
+	<image>none</image>
+	<behaviour>normal</behaviour>
+	<special>none</special>
+</item>
+<item>
+	<type>life</type>
+	<x>300</x>
+	<y>10</y>
+	<rot>0</rot>
+	<rotspeed>270</rotspeed>
+	<life>1</life>
+	<image>none</image>
+	<behaviour>normal</behaviour>
+	<special>none</special>
+</item>
+</fase>
