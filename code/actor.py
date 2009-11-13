@@ -22,10 +22,10 @@ class Actor(GameObject):
         """
         Set acceleration and image
         """
-        self.acceleration = [3,3]
         GameObject.__init__(self, image, position, rotation, speed,
                             rotation_speed)
         self.set_life(life)
+        self.set_accel([3, 3])
 
     def get_life(self):
         """
@@ -53,6 +53,18 @@ class Actor(GameObject):
         Return true if the object's life reached 0
         """
         return self.get_life() == 0
+
+    def get_accel(self):
+        """
+        Returns acceleration
+        """
+        return self.acceleration
+
+    def set_accel(self, accel):
+        """
+        Sets acceleration
+        """
+        self.acceleration = accel
 
     def accel_top(self):
         """
