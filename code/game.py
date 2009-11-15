@@ -24,7 +24,7 @@ from background import Background
 from player import Player
 from enemy import Enemy
 from hud import HUD
-from fase import Fase
+from stage import Stage
 from music import Music_player
 
 class Game:
@@ -314,7 +314,7 @@ class Game:
         # increase xp based on hits
         self.player.set_xp(self.player.get_xp() + len(hitted))
 
-    def manage_elements(self, fase, counter):
+    def manage_elements(self, stage, counter):
         """
         Creates enemies and itens based on the xml parsed file
         """
@@ -328,7 +328,7 @@ class Game:
                 self.ticks = 0
 
         # creates enemies based on xml file
-        L = fase.pop(counter)
+        L = stage.pop(counter)
         for element in L:
             # fix: these attributes should be handled by xml parser
             rot = 270
@@ -368,8 +368,8 @@ class Game:
             "fire" : pygame.sprite.RenderPlain(),
         }
 
-        fase = Fase("fase1.xml")
-        fase.buildStage()
+        stage = Stage("stage1.xml")
+        stage.buildStage()
         counter = 0
 
         # loads next music
@@ -388,7 +388,7 @@ class Game:
             self.actors_act()
 
             # create enemies based on xml file
-            self.manage_elements(fase, counter)
+            self.manage_elements(stage, counter)
 
             # draw the elements to the back buffer
             self.actors_draw()
