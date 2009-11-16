@@ -32,40 +32,26 @@ def usage():
     """
     prog = sys.argv[0]
     print "Usage:"
-    print "\t%s [-f|--fullscreen] [-r <YxZ>|--resolution=<YxZ>]" % prog
+    print "\t%s [-h|--help]" % prog
     print
 
 def parse_opts(argv):
     """
-    Parses the command line argument and return the options
+    Parses the command line argument
     """
     # get options and arguments using getopt
     try:
-        opts, args = getopt.gnu_getopt(argv[1 :], "hfr:",
-                                       ["help", "fullscreen", "resolution="])
+        opts, args = getopt.gnu_getopt(argv[1 :], "h", ["help"])
     except getopt.GetoptError:
         # if command line is wrong, print usage info and exit
         usage()
         sys.exit(2)
 
-    # default options
-    options = {"fullscreen": False, "resolution": (800,600)}
-
     for o, a in opts:
-        if o in ("-f", "--fullscreen"):
-            options["fullscreen"] = True
-        elif o in ("-h", "--help"):
+        if o in ("-h", "--help"):
             usage()
             help()
             sys.exit(0)
-        elif o in ("-r", "--resolution"):
-            # the resolution can be providded as 1x1 1X1 1,1 1:1
-            a = a.lower()
-            resolution = a.split("x")
-            if len(resolution) == 2 :
-                options["resolution"] = [ int(resolution[0]),
-                                          int(resolution[1])]
-    return options
 
 def main(argv):
     """
@@ -92,7 +78,7 @@ def main(argv):
     os.chdir(DATADIR)
     sys.path.insert(0, CODEDIR)
 
-    options = parse_opts(argv)
+    parse_opts(argv)
 
     from game import Game
     from preferences import Preferences
