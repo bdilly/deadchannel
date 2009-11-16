@@ -20,7 +20,8 @@ class Callable:
         self.__call__ = anycallable
 
 class Item:
-    def __init__(self, x, y, rot, rotspeed, life, image, type, behaviour, special):
+    def __init__(self, x, y, rot, rotspeed, life, image, type, behaviour, 
+                 special):
         self.x = x
         self.y = y
         self.rot = rot
@@ -39,14 +40,14 @@ class Stage:
         self.data = xml.dom.minidom.parse(file)
 
     def __cmp__(self, other):
-	return cmp(self.x, other.x)
+        return cmp(self.x, other.x)
 
     def getNextX(self):
-	if len(self.L) > 0:
-	    item = self.L[len(self.L) - 1]
-	    return item.x
-	else:
-	    return -1
+        if len(self.L) > 0:
+            item = self.L[len(self.L) - 1]
+            return item.x
+        else:
+            return -1
 
     def include(self, item):
         self.L.append(item)
@@ -60,9 +61,9 @@ class Stage:
         return subList
 
     def buildStage(self):
-    	for nodes in self.data.getElementsByTagName("item"):
+        for nodes in self.data.getElementsByTagName("item"):
             x = int(nodes.getElementsByTagName("x")[0].childNodes[0].nodeValue)
- 	    y = int(nodes.getElementsByTagName("y")[0].childNodes[0].nodeValue)
+            y = int(nodes.getElementsByTagName("y")[0].childNodes[0].nodeValue)
             rot = int(nodes.getElementsByTagName("rot")[0].childNodes[0].nodeValue)
             rotspeed = int(nodes.getElementsByTagName("rotspeed")[0].childNodes[0].nodeValue)
             life = int(nodes.getElementsByTagName("life")[0].childNodes[0].nodeValue)
@@ -72,14 +73,14 @@ class Stage:
             special = nodes.getElementsByTagName("special")[0].childNodes[0].nodeValue
             item = Item(x, y, rot, rotspeed, life, image, itemType, behaviour, special)
             self.include(item)
-	    #print "New object on xml file:"
+            #print "New object on xml file:"
             #print x
-	    #print y
+            #print y
             #print life
-	    #print image
+            #print image
             #print itemtype
-	    #print behaviour
+            #print behaviour
             #print special
-	#below is some black magic I'm not sure how to deal with... but works
-	#taken from stackoverflow.org
-	self.L.sort(key=lambda item: item.x, reverse=True)
+        #below is some black magic I'm not sure how to deal with... but works
+        #taken from stackoverflow.org
+        self.L.sort(key=lambda item: item.x, reverse=True)
