@@ -71,11 +71,23 @@ def main(argv):
     """
     Gets command line options and starts the game
     """
-    # set directories
+    # set directories and files
     abspath = os.path.abspath(argv[0])
     dir = os.path.dirname(abspath)
     DATADIR = os.path.join(dir, 'data')
     CODEDIR = os.path.join(dir, 'code')
+    DEFPREFFILE = os.path.join(DATADIR, 'default_preferences.cfg')
+    if os.name == 'posix':
+        HOMEDIR = os.environ['HOME']
+        GAMEDIR = os.path.join(HOMEDIR, '.deadchannel')
+        if not os.path.isdir(GAMEDIR):
+            try:
+                os.mkdir(GAMEDIR, 0755)
+            except OSError:
+                GAMEDIR = HOMEDIR
+        PREFFILE = os.path.join(GAMEDIR, 'preferences.cfg')
+    else:
+        PREFFILE = os.path.join('data', 'preferences.cfg')
     # change to the correct directory to find resources
     os.chdir(DATADIR)
     sys.path.insert(0, CODEDIR)
@@ -83,7 +95,9 @@ def main(argv):
     options = parse_opts(argv)
 
     from game import Game
-    game = Game(options["resolution"], options["fullscreen"])
+    from preferences import Preferences
+    preferences = Preferences(PREFFILE, DEFPREFFILE)
+    game = Game(preferences)
     # starts game's main loop
     game.loop()
 

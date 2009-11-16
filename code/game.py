@@ -33,55 +33,30 @@ class Game:
     run = True
     actors_list = None
     player = None
-    # if false, use keys to rotate the player. otherwise use analogic input
-    analogic = True
-    keys_up = [K_UP, K_w]
-    keys_down = [K_DOWN, K_s]
-    keys_right = [K_RIGHT, K_d]
-    keys_left = [K_LEFT, K_a]
-    keys_fire = [K_SPACE]
-    keys_rot_clock = [K_e]
-    keys_rot_anti_clock = [K_q]
-    mouse_sensitivity = .6
     rot_accel = 2
-    # controls horizontal movement
-    j_axis_x = 0
-    # controls vertical movement
-    j_axis_y = 1
-    # controls rotational movement
-    j_axis_z = 3
-    # fire button
-    j_bt_fire = 5
-    # rotation buttons
-    j_bt_rot_clock = 0
-    j_bt_rot_anti_clock = 1
-    # joystick sensitivity
-    joy_sensitivity = 5
-    # joystick deadzone. abs values for axis motion less than that shouldn't
-    # be considered
-    joy_deadzone = .2
 
-    def __init__(self, size, fullscreen):
+    def __init__(self, preferences):
         """
         Starts pygamge, defines resolution, sets caption, disable mouse cursor.
         """
         # Set mixer arguments before modules initialization
         pygame.mixer.pre_init(44100)
         # initialize all needed pygame modules
+        self.preferences = preferences
         pygame.init()
         flags = DOUBLEBUF
-        if fullscreen:
+        if preferences.fullscreen:
             flags |= FULLSCREEN
         # create display
-        self.screen = pygame.display.set_mode(size, flags)
+        self.screen = pygame.display.set_mode(preferences.resolution, flags)
         self.screen_size = self.screen.get_size()
 
         # make mouse cursor invisible
         pygame.mouse.set_visible(False)
         # grabs the mouse, so pygame has complete control over it
         pygame.event.set_grab(True)
-        # change the title windows to "deadchannel"
-        pygame.display.set_caption('deadchannel')
+        # set title windows
+        pygame.display.set_caption('Dead Channel');
 
         # initialize joysticks
         self.init_joysticks()
@@ -126,125 +101,136 @@ class Game:
         Handle user's events.
         """
         player = self.player
+        preferences = self.preferences
 
         for event in pygame.event.get():
             type = event.type
             if type in (KEYDOWN, KEYUP):
                 key = event.key
-            if type in (MOUSEBUTTONUP, MOUSEBUTTONDOWN):
+            elif type in (MOUSEBUTTONUP, MOUSEBUTTONDOWN):
                 button = event.button
-            if type == MOUSEMOTION:
+            elif type == MOUSEMOTION:
                 mouse_rel = event.rel
-            if type in (JOYBUTTONUP, JOYBUTTONDOWN):
+            elif type in (JOYBUTTONUP, JOYBUTTONDOWN):
+                joy_id = event.joy
                 button = event.button
-            if type == JOYAXISMOTION:
+            elif type == JOYAXISMOTION:
+                joy_id = event.joy
                 axis = event.axis
                 value = event.value
-            if type == JOYHATMOTION:
+            elif type == JOYHATMOTION:
+                joy_id = event.joy
                 value = event.value
-            if type == QUIT:
+            elif type == QUIT:
                 self.run = False
-
-            elif type == KEYDOWN:
+            if type == KEYDOWN:
                 if key == K_ESCAPE:
                     self.run = False
-                elif key in self.keys_up:
-                    player.accel_top()
-                elif key in self.keys_down:
-                    player.accel_bottom()
-                elif key in self.keys_right:
-                    player.accel_right()
-                elif key in self.keys_left:
-                    player.accel_left()
-                elif not self.analogic:
-                    if key in self.keys_fire:
+
+            if preferences.input in ("mouse", "keyboard"):
+                if type == KEYDOWN:
+                    if key == preferences.key_up:
+                        player.accel_top()
+                    elif key == preferences.key_down:
+                        player.accel_bottom()
+                    elif key == preferences.key_right:
+                        player.accel_right()
+                    elif key == preferences.key_left:
+                        player.accel_left()
+                    elif key == preferences.key_player_play:
+                        self.music_player.play()
+                    elif key == preferences.key_player_stop:
+                        self.music_player.stop()
+                    elif key == preferences.key_player_next_track:
+                        self.music_player.next_track()
+                elif type == KEYUP:
+                    if key == preferences.key_down:
+                        player.accel_top()
+                    elif key == preferences.key_up:
+                        player.accel_bottom()
+                    elif key == preferences.key_left:
+                        player.accel_right()
+                    elif key == preferences.key_right:
+                        player.accel_left()
+
+                if preferences.input == "keyboard":
+                    if type == KEYDOWN:
+                        if key == preferences.key_fire:
+                            player.fire(self.actors_list["fire"],
+                                        self.image_player_fire)
+                        elif key == preferences.key_rot_clock:
+                            player.rotate_clock(self.rot_accel)
+                        elif key == preferences.key_rot_anti_clock:
+                            player.rotate_clock(-self.rot_accel)
+                    elif type == KEYUP:
+                        if key == preferences.key_rot_clock:
+                            player.rotate_clock(-self.rot_accel)
+                        elif key == preferences.key_rot_anti_clock:
+                            player.rotate_clock(self.rot_accel)
+
+                elif preferences.input == "mouse":
+                    if type == MOUSEBUTTONDOWN:
+                        # mouse left button is 1, middle is 2, and right is 3
+                        if button == preferences.mouse_fire:
+                            player.fire(self.actors_list["fire"],
+                                        self.image_player_fire)
+                    elif type == MOUSEMOTION:
+                        # rel is a tuple with x and y relative movements
+                        # if player move the cursor down or left, it has
+                        # the same effect
+                        #FIXME HACK: the first rel is a huge number, the
+                        # difference between 0, 0 and the curson position.
+                        # So it needs to be avoided.
+                        # This hack should be removed after we include
+                        # screens before the game screen
+                        if mouse_rel[0] < 100 and mouse_rel[1] < 100:
+                            rot = player.get_rotation()
+                            rot = rot + int((mouse_rel[0] + mouse_rel[1]) *\
+                                             preferences.mouse_sensitivity)
+                            player.set_rotation(rot)
+
+            elif preferences.input == "joystick_analogic":
+                if type == JOYAXISMOTION and joy_id == preferences.joy_id:
+                    if axis == preferences.j_axis_x:
+                        if abs(value) > preferences.joy_deadzone:
+                            h_speed = value * preferences.joy_sensitivity
+                        else:
+                            h_speed = 0
+                        player.set_speed([h_speed, player.get_speed()[1]])
+                    elif axis == preferences.j_axis_y:
+                        if abs(value) > preferences.joy_deadzone:
+                            v_speed = value * preferences.joy_sensitivity
+                        else:
+                            v_speed = 0
+                        player.set_speed([player.get_speed()[0], v_speed])
+                    elif axis == preferences.j_axis_z:
+                        if abs(value) < preferences.joy_deadzone:
+                            value = 0
+                        rot_speed = int(value * preferences.joy_sensitivity)
+                        player.set_rotation_speed(rot_speed)
+                elif type == JOYBUTTONDOWN and joy_id == preferences.joy_id:
+                    if button == preferences.j_bt_fire:
                         player.fire(self.actors_list["fire"],
                                     self.image_player_fire)
-                    elif key in self.keys_rot_clock:
-                        player.rotate_clock(self.rot_accel)
-                    elif key in self.keys_rot_anti_clock:
-                        player.rotate_clock(-self.rot_accel)
-                elif key == K_v:
-                    self.music_player.play()
-                elif key == K_b:
-                    self.music_player.stop()
-                elif key == K_n:
-                    self.music_player.next_track()
 
-
-            elif type == KEYUP:
-                if key in self.keys_down:
-                    player.accel_top()
-                elif key in self.keys_up:
-                    player.accel_bottom()
-                elif key in self.keys_left:
-                    player.accel_right()
-                elif key in self.keys_right:
-                    player.accel_left()
-                elif not self.analogic:
-                    if key in self.keys_rot_clock:
-                        player.rotate_clock(-self.rot_accel)
-                    elif key in self.keys_rot_anti_clock:
-                        player.rotate_clock(self.rot_accel)
-
-            elif type == MOUSEBUTTONDOWN and self.analogic:
-                # mouse left button is 1, middle is 2, and right is 3
-                if button == 1:
-                    player.fire(self.actors_list["fire"],
-                                self.image_player_fire)
-
-            elif type == MOUSEMOTION and self.analogic:
-                # rel is a tuple with x and y relative movements
-                # if player move the cursor down or left, it has the same
-                # effect
-                #FIXME HACK: the first rel is a huge number, the difference
-                # between 0, 0 and the curson position. So it needs to be
-                # avoided. This hack should be removed after we include
-                # screens before the game screen
-                if mouse_rel[0] < 100 and mouse_rel[1] < 100:
-                    rot = player.get_rotation()
-                    rot = rot + int((mouse_rel[0] + mouse_rel[1]) *\
-                                     self.mouse_sensitivity)
-                    player.set_rotation(rot)
-
-            elif type == JOYAXISMOTION:
-                if axis == self.j_axis_x:
-                    if abs(value) > self.joy_deadzone:
-                        h_speed = value * self.joy_sensitivity
-                    else:
-                        h_speed = 0
-                    player.set_speed([h_speed, player.get_speed()[1]])
-                elif axis == self.j_axis_y:
-                    if abs(value) > self.joy_deadzone:
-                        v_speed = value * self.joy_sensitivity
-                    else:
-                        v_speed = 0
-                    player.set_speed([player.get_speed()[0], v_speed])
-                elif axis == self.j_axis_z:
-                    if abs(value) < self.joy_deadzone:
-                        value = 0
-                    rot_speed = int(value * self.joy_sensitivity)
-                    player.set_rotation_speed(rot_speed)
-
-            elif type == JOYHATMOTION:
-                accel = player.get_accel()
-                speed = [value[0] * accel[0], -value[1] * accel[1]]
-                player.set_speed(speed)
-
-            elif type == JOYBUTTONDOWN:
-                if button == self.j_bt_fire:
-                    player.fire(self.actors_list["fire"],
-                                self.image_player_fire)
-                elif button == self.j_bt_rot_clock:
-                        player.rotate_clock(self.rot_accel)
-                elif button == self.j_bt_rot_anti_clock:
-                        player.rotate_clock(-self.rot_accel)
-
-            elif type == JOYBUTTONUP:
-                if button == self.j_bt_rot_clock:
-                        player.rotate_clock(-self.rot_accel)
-                elif button == self.j_bt_rot_anti_clock:
-                        player.rotate_clock(self.rot_accel)
+            elif preferences.input == "joystick_d-pad":
+                if type == JOYHATMOTION and joy_id == preferences.joy_id:
+                    accel = player.get_accel()
+                    speed = [value[0] * accel[0], -value[1] * accel[1]]
+                    player.set_speed(speed)
+                elif type == JOYBUTTONDOWN and joy_id == preferences.joy_id:
+                    if button == preferences.j_bt_fire:
+                        player.fire(self.actors_list["fire"],
+                                    self.image_player_fire)
+                    elif button == preferences.j_bt_rot_clock:
+                            player.rotate_clock(self.rot_accel)
+                    elif button == preferences.j_bt_rot_anti_clock:
+                            player.rotate_clock(-self.rot_accel)
+                elif type == JOYBUTTONUP and joy_id == preferences.joy_id:
+                    if button == preferences.j_bt_rot_clock:
+                            player.rotate_clock(-self.rot_accel)
+                    elif button == preferences.j_bt_rot_anti_clock:
+                            player.rotate_clock(self.rot_accel)
 
     def actors_update(self, dt, ms):
         """
