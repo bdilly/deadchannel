@@ -26,6 +26,8 @@ from enemy import Enemy
 from hud import HUD
 from stage import Stage
 from music import Music_player
+from first_aid_kit import FirstAidKit
+from power_up import PowerUp
 
 class Game:
     screen = None
@@ -95,6 +97,7 @@ class Game:
         self.image_enemy = load_image("enemy.png")
         self.image_enemy_fire = load_image("enemy_fire.png")
         self.image_life = load_image("life.png")
+        self.image_first_aid_kit = load_image("first_aid_kit.png")
 
     def handle_events(self):
         """
@@ -270,8 +273,13 @@ class Game:
 
         # check if the actor is a sprite
         elif isinstance(actor, pygame.sprite.Sprite):
-            if pygame.sprite.spritecollide(actor, actors_list, 1):
-                action()
+            # third argument is dokill (if true the object will be killed
+            collided_list = pygame.sprite.spritecollide(actor, actors_list, 1)
+            for obj in collided_list:
+                if isinstance(obj, PowerUp):
+                    action(obj.get_type(), obj.get_special())
+                else:
+                    action()
             return actor.is_dead()
 
     def actors_act(self):
@@ -284,6 +292,10 @@ class Game:
         if self.player.is_dead():
             self.run = False
             return
+
+        # check if the player get a powerup
+        self.actor_check_hit(self.player, self.actors_list["powerups"],
+                             self.player.get_powerup)
 
         # check if the player collided with an enemy
         self.actor_check_hit(self.player, self.actors_list["enemies"],
@@ -326,6 +338,16 @@ class Game:
                 enemy.set_pos(pos)
                 # add sprite to group
                 self.actors_list["enemies"].add(enemy)
+            elif element.type == "first_aid_kit":
+                first_aid = FirstAidKit([0,0], element.life,
+                                        [element.speed_x, element.speed_y],
+                                        int(element.special),
+                                        self.image_first_aid_kit)
+                size = first_aid.get_size()
+                y = Random.randint(size[1] / 2, self.screen_size[1] - size[1] / 2)
+                pos = [self.screen_size[0] + size[0] / 2, y]
+                first_aid.set_pos(pos)
+                self.actors_list["powerups"].add(first_aid)
             else:
                 print "Not an enemy, will be handled soon! ;)"
 
@@ -352,6 +374,7 @@ class Game:
             "enemies_fire" : pygame.sprite.RenderPlain(),
             "player": pygame.sprite.RenderPlain(self.player),
             "fire" : pygame.sprite.RenderPlain(),
+            "powerups" : pygame.sprite.RenderPlain(),
         }
 
         stage = Stage("stage1.xml")

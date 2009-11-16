@@ -72,3 +72,9 @@ class Player(Actor):
         y = speed * math.sin(math.radians(self.get_rotation()))
         Bullet(pos, [x, y], image=image, list=fire_list)
 
+    def get_powerup(self, type, special):
+        """
+        Get a powerup
+        """
+        if type == "life":
+            self.set_life(self.get_life() + special)

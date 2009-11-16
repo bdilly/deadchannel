@@ -20,10 +20,12 @@ class Callable:
         self.__call__ = anycallable
 
 class Item:
-    def __init__(self, x, y, rot, rotspeed, life, image, type, behaviour, 
-                 special):
+    def __init__(self, x, y, speed_x, speed_y, rot, rotspeed, life, image,
+                 type, behaviour, special):
         self.x = x
         self.y = y
+        self.speed_x = speed_x
+        self.speed_y = speed_y
         self.rot = rot
         self.rotspeed = rotspeed
         self.life = life
@@ -64,6 +66,8 @@ class Stage:
         for nodes in self.data.getElementsByTagName("item"):
             x = int(nodes.getElementsByTagName("x")[0].childNodes[0].nodeValue)
             y = int(nodes.getElementsByTagName("y")[0].childNodes[0].nodeValue)
+            speed_x = int(nodes.getElementsByTagName("speed_x")[0].childNodes[0].nodeValue)
+            speed_y = int(nodes.getElementsByTagName("speed_y")[0].childNodes[0].nodeValue)
             rot = int(nodes.getElementsByTagName("rot")[0].childNodes[0].nodeValue)
             rotspeed = int(nodes.getElementsByTagName("rotspeed")[0].childNodes[0].nodeValue)
             life = int(nodes.getElementsByTagName("life")[0].childNodes[0].nodeValue)
@@ -71,7 +75,8 @@ class Stage:
             itemType = nodes.getElementsByTagName("type")[0].childNodes[0].nodeValue
             behaviour = nodes.getElementsByTagName("behaviour")[0].childNodes[0].nodeValue
             special = nodes.getElementsByTagName("special")[0].childNodes[0].nodeValue
-            item = Item(x, y, rot, rotspeed, life, image, itemType, behaviour, special)
+            item = Item(x, y, speed_x, speed_y, rot, rotspeed, life, image,
+                        itemType, behaviour, special)
             self.include(item)
             #print "New object on xml file:"
             #print x
