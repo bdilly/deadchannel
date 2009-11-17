@@ -25,7 +25,7 @@ class Player(Actor):
         Actor.__init__(self, position, rotation, life, [0, 0], 0, image)
         self.set_xp(0)
 
-    def update(self, dt):
+    def update(self, dt, ms):
         """
         Override GameObjecte update()
         Keep the player inside the screen instead of killing it

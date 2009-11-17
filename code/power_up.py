@@ -26,6 +26,15 @@ class PowerUp(GameObject):
         self.special = special
         self.set_life_time(life_time)
 
+    def update(self, dt, ms):
+        """
+        Overrides GameObject update
+        """
+        self.set_life_time(self.get_life_time() - ms)
+        if self.get_life_time() < 0:
+            self.kill()
+        GameObject.update(self, dt, ms)
+
     def get_life_time(self):
         """
         Return how much time the object will remains alive

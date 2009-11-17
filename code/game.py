@@ -242,7 +242,7 @@ class Game:
         self.background.update(dt)
 
         for actor in self.actors_list.values():
-            actor.update(dt)
+            actor.update(dt, ms)
 
         self.hud.update(dt, ms)
 
