@@ -111,6 +111,15 @@ class Preferences:
     def get_joy_rot_anti_clock(self):
         return int(self.get('joystick', 'rot_anti_clock'))
 
+    def get_joy_player_play(self):
+        return int(self.get('joystick', 'player_play'))
+
+    def get_joy_player_stop(self):
+        return int(self.get('joystick', 'player_stop'))
+
+    def get_joy_player_next_track(self):
+        return int(self.get('joystick', 'player_next_track'))
+
     def get_joy_sensitivity(self):
         return float(self.get('joystick', 'sensitivity'))
 
@@ -122,6 +131,9 @@ class Preferences:
 
     def get_input(self):
         return self.get('general', 'input')
+
+    def get_music_volume(self):
+        return float(self.get('general', 'music_volume'))
 
     fullscreen = property(get_fullscreen)
     resolution = property(get_resolution)
@@ -143,7 +155,11 @@ class Preferences:
     j_bt_fire = property(get_joy_fire)
     j_bt_rot_clock = property(get_joy_rot_clock)
     j_bt_rot_anti_clock = property(get_joy_rot_anti_clock)
+    j_bt_player_play = property(get_joy_player_play)
+    j_bt_player_stop = property(get_joy_player_stop)
+    j_bt_player_next_track = property(get_joy_player_next_track)
     joy_sensitivity = property(get_joy_sensitivity)
     joy_deadzone = property(get_joy_deadzone)
     joy_id = property(get_joy_id)
     input = property(get_input)
+    music_volume = property(get_music_volume)

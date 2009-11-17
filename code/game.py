@@ -65,7 +65,7 @@ class Game:
         # load all images TODO: it could display a "loading" screen
         self.load_images()
         # loads music player
-        self.music_player = Music_player()
+        self.music_player = Music_player(preferences.music_volume)
 
     def init_joysticks(self):
         """
@@ -192,48 +192,55 @@ class Game:
                                              preferences.mouse_sensitivity)
                             player.set_rotation(rot)
 
-            elif preferences.input == "joystick_analogic":
-                if type == JOYAXISMOTION and joy_id == preferences.joy_id:
-                    if axis == preferences.j_axis_x:
-                        if abs(value) > preferences.joy_deadzone:
-                            h_speed = value * preferences.joy_sensitivity
-                        else:
-                            h_speed = 0
-                        player.set_speed([h_speed, player.get_speed()[1]])
-                    elif axis == preferences.j_axis_y:
-                        if abs(value) > preferences.joy_deadzone:
-                            v_speed = value * preferences.joy_sensitivity
-                        else:
-                            v_speed = 0
-                        player.set_speed([player.get_speed()[0], v_speed])
-                    elif axis == preferences.j_axis_z:
-                        if abs(value) < preferences.joy_deadzone:
-                            value = 0
-                        rot_speed = int(value * preferences.joy_sensitivity)
-                        player.set_rotation_speed(rot_speed)
-                elif type == JOYBUTTONDOWN and joy_id == preferences.joy_id:
+            elif preferences.input in ("joystick_analogic",
+                                       "joystick_d-pad"):
+                if type == JOYBUTTONDOWN and joy_id == preferences.joy_id:
                     if button == preferences.j_bt_fire:
                         player.fire(self.actors_list["fire"],
                                     self.image_player_fire)
+                    if button == preferences.j_bt_player_play:
+                        self.music_player.play()
+                    if button == preferences.j_bt_player_stop:
+                        self.music_player.stop()
+                    if button == preferences.j_bt_player_next_track:
+                        self.music_player.next_track()
 
-            elif preferences.input == "joystick_d-pad":
-                if type == JOYHATMOTION and joy_id == preferences.joy_id:
-                    accel = player.get_accel()
-                    speed = [value[0] * accel[0], -value[1] * accel[1]]
-                    player.set_speed(speed)
-                elif type == JOYBUTTONDOWN and joy_id == preferences.joy_id:
-                    if button == preferences.j_bt_fire:
-                        player.fire(self.actors_list["fire"],
-                                    self.image_player_fire)
-                    elif button == preferences.j_bt_rot_clock:
-                            player.rotate_clock(self.rot_accel)
-                    elif button == preferences.j_bt_rot_anti_clock:
-                            player.rotate_clock(-self.rot_accel)
-                elif type == JOYBUTTONUP and joy_id == preferences.joy_id:
-                    if button == preferences.j_bt_rot_clock:
-                            player.rotate_clock(-self.rot_accel)
-                    elif button == preferences.j_bt_rot_anti_clock:
-                            player.rotate_clock(self.rot_accel)
+                if preferences.input == "joystick_analogic":
+                    if type == JOYAXISMOTION and joy_id == preferences.joy_id:
+                        if axis == preferences.j_axis_x:
+                            if abs(value) > preferences.joy_deadzone:
+                                h_speed = value * preferences.joy_sensitivity
+                            else:
+                                h_speed = 0
+                            player.set_speed([h_speed, player.get_speed()[1]])
+                        elif axis == preferences.j_axis_y:
+                            if abs(value) > preferences.joy_deadzone:
+                                v_speed = value * preferences.joy_sensitivity
+                            else:
+                                v_speed = 0
+                            player.set_speed([player.get_speed()[0], v_speed])
+                        elif axis == preferences.j_axis_z:
+                            if abs(value) < preferences.joy_deadzone:
+                                value = 0
+                            rot_speed = int(value* preferences.joy_sensitivity)
+                            player.set_rotation_speed(rot_speed)
+
+                elif preferences.input == "joystick_d-pad":
+                    if type == JOYHATMOTION and joy_id == preferences.joy_id:
+                        accel = player.get_accel()
+                        speed = [value[0] * accel[0], -value[1] * accel[1]]
+                        player.set_speed(speed)
+                    elif type == JOYBUTTONDOWN and \
+                         joy_id == preferences.joy_id:
+                        if button == preferences.j_bt_rot_clock:
+                                player.rotate_clock(self.rot_accel)
+                        elif button == preferences.j_bt_rot_anti_clock:
+                                player.rotate_clock(-self.rot_accel)
+                    elif type == JOYBUTTONUP and joy_id == preferences.joy_id:
+                        if button == preferences.j_bt_rot_clock:
+                                player.rotate_clock(-self.rot_accel)
+                        elif button == preferences.j_bt_rot_anti_clock:
+                                player.rotate_clock(self.rot_accel)
 
     def actors_update(self, dt, ms):
         """

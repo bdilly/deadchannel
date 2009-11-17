@@ -23,13 +23,14 @@ class Music_player:
     loaded = -1
     loaded_track_info = None
 
-    def __init__(self):
+    def __init__(self, volume=1.0):
         """
         Initializes music playback
         """
         # Fills the playlist
         # TODO
         self.playlist = glob.glob(os.path.join('music', '*.ogg'))
+        pygame.mixer.music.set_volume(volume)
 
     def load_next(self):
         """
