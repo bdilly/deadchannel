@@ -36,6 +36,9 @@ class Music_player:
         """
         Loads next music in the playlist. Wraps around if playlist ended.
         """
+        # if playlist is empty, don't do anything
+        if len(self.playlist) == 0:
+            return
         loading = (self.loaded + 1) % len(self.playlist)
         try:
             pygame.mixer.music.load(self.playlist[loading])
@@ -49,6 +52,9 @@ class Music_player:
         """
         Plays currently loaded music
         """
+        # if music not loaded, return
+        if self.loaded == -1:
+            return
         pygame.mixer.music.play()
 
     def stop(self):
