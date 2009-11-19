@@ -33,6 +33,7 @@ class Music_player:
         pygame.mixer.music.set_volume(volume)
         # The music player need a reference to the hud to show track info
         self.hud = hud
+        self.playing = False
 
     def load_next(self):
         """
@@ -57,21 +58,25 @@ class Music_player:
         Plays currently loaded music
         """
         # if music not loaded, return
-        if self.loaded_index == -1:
+        if self.loaded_index == -1 or self.playing:
             return
-        self.hud.hide_track_info()
+
         self.hud.show_track_info()
         pygame.mixer.music.play()
+        self.playing = True
 
     def stop(self):
         """
         Stops currently playing track
         """
+        self.hud.hide_track_info()
         pygame.mixer.music.stop()
+        self.playing = False
 
     def next_track(self):
         """
         Loads and plays next track in playlist
         """
+        self.stop()
         self.load_next()
         self.play()
