@@ -64,8 +64,6 @@ class Game:
         self.init_joysticks()
         # load all images TODO: it could display a "loading" screen
         self.load_images()
-        # loads music player
-        self.music_player = Music_player(preferences.music_volume)
 
     def init_joysticks(self):
         """
@@ -251,7 +249,7 @@ class Game:
         for actor in self.actors_list.values():
             actor.update(dt, ms)
 
-        self.hud.update(dt, ms)
+        self.hud.update(self.screen, ms)
 
     def actors_draw(self):
         """
@@ -388,6 +386,9 @@ class Game:
         stage.buildStage()
         counter = 0
 
+        # loads music player
+        self.music_player = Music_player(
+            self.hud, self.preferences.music_volume)
         # loads next music
         self.music_player.load_next()
         # Starts playing music
