@@ -59,6 +59,7 @@ class Music_player:
         # if music not loaded, return
         if self.loaded_index == -1:
             return
+        self.hud.hide_track_info()
         self.hud.show_track_info()
         pygame.mixer.music.play()
 
@@ -72,6 +73,5 @@ class Music_player:
         """
         Loads and plays next track in playlist
         """
-        self.stop()
         self.load_next()
         self.play()

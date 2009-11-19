@@ -21,7 +21,7 @@ TRACK_INFO_BOX_POS = (1.0, 0.95)     # (w, h)
 # Text to box margin in pixels
 TRACK_INFO_BOX_MARGIN = (15, 15)    # (TB, LR)
 # Time to go in and out in ms
-TRACK_INFO_BOX_ANIM_TIME = 200
+TRACK_INFO_BOX_ANIM_TIME = 500
 # Time that track info will be shown
 TRACK_INFO_TIME = 3000
 
@@ -51,6 +51,7 @@ class HUD:
         self.size_image_life= self.image_life.get_size()
         self.start_showing_track = False
         self.showing_track = False
+        self.hide_track = False
 
     def set_track_info(self, info):
         """
@@ -66,6 +67,10 @@ class HUD:
         if not self.track_info:
             return
         self.start_showing_track = True
+
+    def hide_track_info(self):
+        if self.showing_track:
+           self.hide_track = True
 
     def __render_trackbox(self):
         info = self.track_info
@@ -86,7 +91,7 @@ class HUD:
             hf1 + hf0 + (TRACK_INFO_BOX_MARGIN[1] * 2)]
         bg = pygame.Surface(bg_size, HWSURFACE | SRCALPHA)
         bg.fill((0, 0, 0, 200))
-        # Calculates its position on HUD (lower right)
+
         #self.trackbox_pos = [(TRACK_INFO_BOX_POS[0] * w) - bg_size[0],
         #    (TRACK_INFO_BOX_POS[1] * h) - bg_size[1]]
         # Blits text to background
@@ -104,30 +109,43 @@ class HUD:
             return
         info = self.track_info
         w, h = screen.get_size()
-        if self.start_showing_track:
+        if self.start_showing_track and not self.hide_track:
             self.showing_track = True
             self.elapsed_time_showing_track = 0
             self.start_showing_track = False
             self.image_trackbox = self.__render_trackbox()
             htb = self.image_trackbox.get_height()
             self.trackbox_pos = [w, (TRACK_INFO_BOX_POS[1] * h) - htb]
-            #self.trackbox_dt = (1000 / 24)
-            #(w - ((TRACK_INFO_BOX_POS[1] * w) - wtb)) /
+            self.hide_track = False
         elif self.showing_track:
             elapsed = self.elapsed_time_showing_track
             if elapsed > TRACK_INFO_TIME + (2 * TRACK_INFO_BOX_ANIM_TIME):
                 self.showing_track = False
+                self.trackbox_pos[0] = w
+                self.hide_track = False
+                self.elapsed_time_showing_track = 0
             else:
                 wtb = self.image_trackbox.get_width()
                 trackbox_minw = (TRACK_INFO_BOX_POS[0] * w) - wtb
                 ppms = float(wtb) / float(TRACK_INFO_BOX_ANIM_TIME)
                 if elapsed + ms < TRACK_INFO_BOX_ANIM_TIME:
+                    if self.hide_track:
+                        self.elapsed_time_showing_track = \
+                            2 * TRACK_INFO_BOX_ANIM_TIME + \
+                            TRACK_INFO_TIME - elapsed
+                    # "Go in" animation
+                    # Calculates its position on HUD during animation
                     self.trackbox_pos[0] -= ppms * ms
-                    #print "Box pos = %s ppms = %s" % (self.trackbox_pos, ppms)
                 elif elapsed + ms > TRACK_INFO_BOX_ANIM_TIME + TRACK_INFO_TIME:
+                    # "Go out" animation
+                    # Calculates its position on HUD during animation
                     self.trackbox_pos[0] += ppms * ms
                 else:
+                    if self.hide_track:
+                        self.elapsed_time_showing_track = \
+                            TRACK_INFO_BOX_ANIM_TIME + TRACK_INFO_TIME
                     self.trackbox_pos[0] = trackbox_minw
+
                 self.elapsed_time_showing_track += ms
 
     def draw_track_info(self, screen):
