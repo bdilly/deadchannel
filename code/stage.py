@@ -64,28 +64,26 @@ class Stage:
 
     def buildStage(self):
         for nodes in self.data.getElementsByTagName("item"):
-            x = int(nodes.getElementsByTagName("x")[0].childNodes[0].nodeValue)
-            y = int(nodes.getElementsByTagName("y")[0].childNodes[0].nodeValue)
-            speed_x = int(nodes.getElementsByTagName("speed_x")[0].childNodes[0].nodeValue)
-            speed_y = int(nodes.getElementsByTagName("speed_y")[0].childNodes[0].nodeValue)
-            rot = int(nodes.getElementsByTagName("rot")[0].childNodes[0].nodeValue)
-            rotspeed = int(nodes.getElementsByTagName("rotspeed")[0].childNodes[0].nodeValue)
-            life = int(nodes.getElementsByTagName("life")[0].childNodes[0].nodeValue)
-            image = nodes.getElementsByTagName("image")[0].childNodes[0].nodeValue
             itemType = nodes.getElementsByTagName("type")[0].childNodes[0].nodeValue
-            behaviour = nodes.getElementsByTagName("behaviour")[0].childNodes[0].nodeValue
-            special = nodes.getElementsByTagName("special")[0].childNodes[0].nodeValue
-            item = Item(x, y, speed_x, speed_y, rot, rotspeed, life, image,
-                        itemType, behaviour, special)
+            x = int(nodes.getElementsByTagName("x")[0].childNodes[0].nodeValue)
+            image = nodes.getElementsByTagName("image")[0].childNodes[0].nodeValue
+
+            if itemType == "background":
+                item = Item(x, "", "", "", "", "", "", image, itemType, "", "")
+
+            else:
+
+                life = int(nodes.getElementsByTagName("life")[0].childNodes[0].nodeValue)
+                y = int(nodes.getElementsByTagName("y")[0].childNodes[0].nodeValue)
+                speed_x = int(nodes.getElementsByTagName("speed_x")[0].childNodes[0].nodeValue)
+                speed_y = int(nodes.getElementsByTagName("speed_y")[0].childNodes[0].nodeValue)
+                rot = int(nodes.getElementsByTagName("rot")[0].childNodes[0].nodeValue)
+                rotspeed = int(nodes.getElementsByTagName("rotspeed")[0].childNodes[0].nodeValue)
+                life = int(nodes.getElementsByTagName("life")[0].childNodes[0].nodeValue)
+                behaviour = nodes.getElementsByTagName("behaviour")[0].childNodes[0].nodeValue
+                special = nodes.getElementsByTagName("special")[0].childNodes[0].nodeValue
+                item = Item(x, y, speed_x, speed_y, rot, rotspeed, life, image, itemType, behaviour, special)
             self.include(item)
-            #print "New object on xml file:"
-            #print x
-            #print y
-            #print life
-            #print image
-            #print itemtype
-            #print behaviour
-            #print special
         #below is some black magic I'm not sure how to deal with... but works
         #taken from stackoverflow.org
         self.L.sort(key=lambda item: item.x, reverse=True)

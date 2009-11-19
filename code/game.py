@@ -355,13 +355,20 @@ class Game:
                 pos = [self.screen_size[0] + size[0] / 2, y]
                 first_aid.set_pos(pos)
                 self.actors_list["powerups"].add(first_aid)
-            else:
-                print "Not an enemy, will be handled soon! ;)"
+            elif element.type == "background":
+                self.background.nextTile(element.image)
+                print "backgs"
 
     def loop(self):
         """
         Main loop
         """
+
+        # loads stage configuration
+        stage = Stage("stage1.xml")
+        stage.buildStage()
+        counter = 0
+
         # creates the background
         self.background = Background("tile.png")
 
@@ -383,10 +390,6 @@ class Game:
             "fire" : pygame.sprite.RenderPlain(),
             "powerups" : pygame.sprite.RenderPlain(),
         }
-
-        stage = Stage("stage1.xml")
-        stage.buildStage()
-        counter = 0
 
         # loads next music
         self.music_player.load_next()
