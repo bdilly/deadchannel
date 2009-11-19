@@ -1,55 +1,75 @@
 <?xml version="1.0"?>
 <fase>
 <item>
-	<type>enemy</type>
-	<x>100</x>
-	<y>40</y>
-	<speed_x>0</speed_x>
-	<speed_y>0</speed_y>
-	<rot>7</rot>
-	<rotspeed>2</rotspeed>
-	<life>1</life>
-	<image>none</image>
-	<behaviour>normal</behaviour>
-	<special>0</special>
+    <type>background</type>
+    <x>1</x>
+    <image>tiles/stars1.jpg</image>
 </item>
 <item>
-	<type>enemy</type>
-	<x>200</x>
-	<y>388</y>
-	<speed_x>0</speed_x>
-	<speed_y>0</speed_y>
-	<rot>20</rot>
-	<rotspeed>20</rotspeed>
-	<life>1</life>
-	<image>none</image>
-	<behaviour>normal</behaviour>
-	<special>0</special>
+    <type>enemy</type>
+    <x>100</x>
+    <y>40</y>
+    <speed_x>0</speed_x>
+    <speed_y>0</speed_y>
+    <rot>7</rot>
+    <rotspeed>2</rotspeed>
+    <life>1</life>
+    <image>none</image>
+    <behaviour>normal</behaviour>
+    <special>0</special>
 </item>
 <item>
-	<type>enemy</type>
-	<x>200</x>
-	<y>200</y>
-	<speed_x>0</speed_x>
-	<speed_y>0</speed_y>
-	<rot>40</rot>
-	<rotspeed>0</rotspeed>
-	<life>1</life>
-	<image>none</image>
-	<behaviour>normal</behaviour>
-	<special>0</special>
+    <type>enemy</type>
+    <x>200</x>
+    <y>388</y>
+    <speed_x>0</speed_x>
+    <speed_y>0</speed_y>
+    <rot>20</rot>
+    <rotspeed>20</rotspeed>
+    <life>1</life>
+    <image>none</image>
+    <behaviour>normal</behaviour>
+    <special>0</special>
 </item>
 <item>
-	<type>first_aid_kit</type>
-	<x>300</x>
-	<y>10</y>
-	<speed_x>-3</speed_x>
-	<speed_y>0</speed_y>
-	<rot>0</rot>
-	<rotspeed>0</rotspeed>
-	<life>2000</life>
-	<image>none</image>
-	<behaviour>none</behaviour>
-	<special>3</special>
+    <type>background</type>
+    <x>200</x>
+    <image>tiles/stars3.jpg</image>
+</item>
+<item>
+    <type>enemy</type>
+    <x>200</x>
+    <y>200</y>
+    <speed_x>0</speed_x>
+    <speed_y>0</speed_y>
+    <rot>40</rot>
+    <rotspeed>0</rotspeed>
+    <life>1</life>
+    <image>none</image>
+    <behaviour>normal</behaviour>
+    <special>0</special>
+</item>
+<item>
+    <type>first_aid_kit</type>
+    <x>300</x>
+    <y>10</y>
+    <speed_x>-3</speed_x>
+    <speed_y>0</speed_y>
+    <rot>0</rot>
+    <rotspeed>0</rotspeed>
+    <life>2000</life>
+    <image>none</image>
+    <behaviour>none</behaviour>
+    <special>3</special>
+</item>
+<item>
+    <type>background</type>
+    <x>1000</x>
+    <image>tiles/stars1.jpg</image>
+</item>
+<item>
+    <type>background</type>
+    <x>1010</x>
+    <image>tiles/stars3.jpg</image>
 </item>
 </fase>
