@@ -101,9 +101,9 @@ class HUD:
             [TRACK_INFO_BOX_MARGIN[0], hf0 + TRACK_INFO_BOX_MARGIN[1]])
         return bg
 
-    def update(self, screen, ms):
+    def __update_trackbox(self, screen, ms):
         """
-        Updates HUD animations
+        Updates trackbox animation
         """
         if not self.track_info:
             return
@@ -125,28 +125,44 @@ class HUD:
                 self.hide_track = False
                 self.elapsed_time_showing_track = 0
             else:
+                elapsed += ms
                 wtb = self.image_trackbox.get_width()
                 trackbox_minw = (TRACK_INFO_BOX_POS[0] * w) - wtb
-                ppms = float(wtb) / float(TRACK_INFO_BOX_ANIM_TIME)
-                if elapsed + ms < TRACK_INFO_BOX_ANIM_TIME:
+                if elapsed < TRACK_INFO_BOX_ANIM_TIME:
                     if self.hide_track:
-                        self.elapsed_time_showing_track = \
-                            2 * TRACK_INFO_BOX_ANIM_TIME + \
+                        elapsed = 2 * TRACK_INFO_BOX_ANIM_TIME + \
                             TRACK_INFO_TIME - elapsed
-                    # "Go in" animation
-                    # Calculates its position on HUD during animation
-                    self.trackbox_pos[0] -= ppms * ms
-                elif elapsed + ms > TRACK_INFO_BOX_ANIM_TIME + TRACK_INFO_TIME:
+                    else:
+                        # "Go in" animation
+                        # Calculates its position on HUD during animation
+                        # Calculates v0 (pixels/ms) v0 = 2*dS/tf
+                        v0 = (2 * (trackbox_minw - w)) / TRACK_INFO_BOX_ANIM_TIME
+                        # Calculates acceleration (pixels/ms^2) a = -v0/tf
+                        a = -v0 / TRACK_INFO_BOX_ANIM_TIME
+                        # S = S0 + V0*t + (a*t^2)/2
+                        self.trackbox_pos[0] = w + (v0 * float(elapsed)) + \
+                            ((a * (float(elapsed)**2)) / 2.0)
+                elif elapsed > TRACK_INFO_BOX_ANIM_TIME + TRACK_INFO_TIME:
+                    t = float(elapsed - (TRACK_INFO_BOX_ANIM_TIME + TRACK_INFO_TIME))
                     # "Go out" animation
                     # Calculates its position on HUD during animation
-                    self.trackbox_pos[0] += ppms * ms
+                    # Calculates acceleration (pixels/ms^2) a = -v0/tf
+                    a = 2 * (w - trackbox_minw) / (TRACK_INFO_BOX_ANIM_TIME**2)
+                    # S = S0 + V0*t + (a*t^2)/2
+                    self.trackbox_pos[0] = trackbox_minw + ((a * (t**2)) / 2.0)
                 else:
                     if self.hide_track:
-                        self.elapsed_time_showing_track = \
-                            TRACK_INFO_BOX_ANIM_TIME + TRACK_INFO_TIME
+                        elapsed = TRACK_INFO_BOX_ANIM_TIME + TRACK_INFO_TIME
+                        print "HIDING TRACK"
                     self.trackbox_pos[0] = trackbox_minw
 
-                self.elapsed_time_showing_track += ms
+                self.elapsed_time_showing_track = elapsed
+
+    def update(self, screen, ms):
+        """
+        Updates HUD animations
+        """
+        self.__update_trackbox(screen, ms)
 
     def draw_track_info(self, screen):
         """
