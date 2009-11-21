@@ -1,6 +1,11 @@
 <?xml version="1.0"?>
 <fase>
 <item>
+    <type>background</type>
+    <x>1</x>
+    <image>tiles/stars1.jpg</image>
+</item>
+<item>
 	<type>enemy</type>
 	<x>100</x>
 	<y>40</y>
@@ -25,6 +30,11 @@
 	<image>none</image>
 	<behaviour>normal</behaviour>
 	<special>0</special>
+</item>
+<item>
+    <type>background</type>
+    <x>200</x>
+    <image>tiles/stars3.jpg</image>
 </item>
 <item>
 	<type>enemy</type>
@@ -129,6 +139,16 @@
 	<image>none</image>
 	<behaviour>normal</behaviour>
 	<special>0</special>
+</item>
+<item>
+    <type>background</type>
+    <x>1000</x>
+    <image>tiles/stars1.jpg</image>
+</item>
+<item>
+    <type>background</type>
+    <x>1010</x>
+    <image>tiles/stars3.jpg</image>
 </item>
 <item>
 	<type>enemy</type>
