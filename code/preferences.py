@@ -72,6 +72,9 @@ class Preferences:
     def get_key_fire(self):
         return int(self.get('keyboard', 'fire'))
 
+    def get_key_secondary_fire(self):
+        return int(self.get('keyboard', 'secondary_fire'))
+
     def get_key_rot_clock(self):
         return int(self.get('keyboard', 'rot_clock'))
 
@@ -87,11 +90,26 @@ class Preferences:
     def get_key_player_next_track(self):
         return int(self.get('keyboard', 'player_next_track'))
 
+    def get_key_prev_secondary_weapon(self):
+        return int(self.get('keyboard', 'prev_secondary_weapon'))
+
+    def get_key_next_secondary_weapon(self):
+        return int(self.get('keyboard', 'next_secondary_weapon'))
+
     def get_mouse_sensitivity(self):
         return float(self.get('mouse', 'sensitivity'))
 
     def get_mouse_fire(self):
         return int(self.get('mouse', 'fire'))
+
+    def get_mouse_secondary_fire(self):
+        return int(self.get('mouse', 'secondary_fire'))
+
+    def get_mouse_prev_secondary_weapon(self):
+        return int(self.get('mouse', 'prev_secondary_weapon'))
+
+    def get_mouse_next_secondary_weapon(self):
+        return int(self.get('mouse', 'next_secondary_weapon'))
 
     def get_joy_axis_x(self):
         return int(self.get('joystick', 'axis_x'))
@@ -104,6 +122,9 @@ class Preferences:
 
     def get_joy_fire(self):
         return int(self.get('joystick', 'fire'))
+
+    def get_joy_secondary_fire(self):
+        return int(self.get('joystick', 'secondary_fire'))
 
     def get_joy_rot_clock(self):
         return int(self.get('joystick', 'rot_clock'))
@@ -119,6 +140,12 @@ class Preferences:
 
     def get_joy_player_next_track(self):
         return int(self.get('joystick', 'player_next_track'))
+
+    def get_joy_prev_secondary_weapon(self):
+        return int(self.get('joystick', 'prev_secondary_weapon'))
+
+    def get_joy_next_secondary_weapon(self):
+        return int(self.get('joystick', 'next_secondary_weapon'))
 
     def get_joy_sensitivity(self):
         return float(self.get('joystick', 'sensitivity'))
@@ -142,22 +169,31 @@ class Preferences:
     key_right = property(get_key_right)
     key_left = property(get_key_left)
     key_fire = property(get_key_fire)
+    key_secondary_fire = property(get_key_secondary_fire)
     key_rot_clock = property(get_key_rot_clock)
     key_rot_anti_clock = property(get_key_rot_anti_clock)
     key_player_play = property(get_key_player_play)
     key_player_stop = property(get_key_player_stop)
     key_player_next_track = property(get_key_player_next_track)
+    key_prev_secondary_weapon = property(get_key_prev_secondary_weapon)
+    key_next_secondary_weapon = property(get_key_next_secondary_weapon)
     mouse_sensitivity = property(get_mouse_sensitivity)
     mouse_fire = property(get_mouse_fire)
+    mouse_secondary_fire = property(get_mouse_secondary_fire)
+    mouse_prev_secondary_weapon = property(get_mouse_prev_secondary_weapon)
+    mouse_next_secondary_weapon = property(get_mouse_next_secondary_weapon)
     j_axis_x = property(get_joy_axis_x)
     j_axis_y = property(get_joy_axis_y)
     j_axis_z = property(get_joy_axis_z)
     j_bt_fire = property(get_joy_fire)
+    j_bt_secondary_fire = property(get_joy_secondary_fire)
     j_bt_rot_clock = property(get_joy_rot_clock)
     j_bt_rot_anti_clock = property(get_joy_rot_anti_clock)
     j_bt_player_play = property(get_joy_player_play)
     j_bt_player_stop = property(get_joy_player_stop)
     j_bt_player_next_track = property(get_joy_player_next_track)
+    j_bt_prev_secondary_weapon = property(get_joy_prev_secondary_weapon)
+    j_bt_next_secondary_weapon = property(get_joy_next_secondary_weapon)
     joy_sensitivity = property(get_joy_sensitivity)
     joy_deadzone = property(get_joy_deadzone)
     joy_id = property(get_joy_id)

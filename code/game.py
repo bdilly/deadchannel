@@ -26,7 +26,6 @@ from enemy import Enemy
 from hud import HUD
 from stage import Stage
 from music import Music_player
-from first_aid_kit import FirstAidKit
 from power_up import PowerUp
 
 class Game:
@@ -93,11 +92,15 @@ class Game:
                       "player_135.png", "player_180.png", "player_225.png",
                       "player_270.png", "player_315.png"]:
             self.image_player.append(load_image(image))
-        self.image_player_fire = load_image("player_fire.png")
         self.image_enemy = load_image("enemy.png")
         self.image_enemy_fire = load_image("enemy_fire.png")
         self.image_life = load_image("life.png")
-        self.image_first_aid_kit = load_image("first_aid_kit.png")
+        self.image_powerup = {}
+        for image in ["first_aid_kit", "sw_mult", "sw_frag"]:
+            self.image_powerup[image] = load_image(image+".png")
+        self.image_player_fire = {}
+        for image in ["fire", "sw_mult", "sw_frag"]:
+            self.image_player_fire[image] = load_image("player_"+image+".png")
 
     def handle_events(self):
         """
@@ -146,6 +149,10 @@ class Game:
                         self.music_player.stop()
                     elif key == preferences.key_player_next_track:
                         self.music_player.next_track()
+                    elif key == preferences.key_prev_secondary_weapon:
+                        player.prev_secondary_weapon()
+                    elif key == preferences.key_next_secondary_weapon:
+                        player.next_secondary_weapon()
                 elif type == KEYUP:
                     if key == preferences.key_down:
                         player.accel_top()
@@ -160,7 +167,13 @@ class Game:
                     if type == KEYDOWN:
                         if key == preferences.key_fire:
                             player.fire(self.actors_list["fire"],
-                                        self.image_player_fire)
+                                        self.image_player_fire["fire"])
+                        elif key == preferences.key_secondary_fire:
+                            sw = player.get_selected_secondary_weapon()
+                            if sw == None:
+                                continue
+                            player.fire(self.actors_list["fire"],
+                                self.image_player_fire[sw.get_type()], False)
                         elif key == preferences.key_rot_clock:
                             player.rotate_clock(self.rot_accel)
                         elif key == preferences.key_rot_anti_clock:
@@ -176,7 +189,17 @@ class Game:
                         # mouse left button is 1, middle is 2, and right is 3
                         if button == preferences.mouse_fire:
                             player.fire(self.actors_list["fire"],
-                                        self.image_player_fire)
+                                        self.image_player_fire["fire"])
+                        elif button == preferences.mouse_secondary_fire:
+                            sw = player.get_selected_secondary_weapon()
+                            if sw == None:
+                                continue
+                            player.fire(self.actors_list["fire"],
+                                self.image_player_fire[sw.get_type()], False)
+                        elif button == preferences.mouse_prev_secondary_weapon:
+                            player.prev_secondary_weapon()
+                        elif button == preferences.mouse_next_secondary_weapon:
+                            player.next_secondary_weapon()
                     elif type == MOUSEMOTION:
                         # rel is a tuple with x and y relative movements
                         # if player move the cursor down or left, it has
@@ -197,13 +220,23 @@ class Game:
                 if type == JOYBUTTONDOWN and joy_id == preferences.joy_id:
                     if button == preferences.j_bt_fire:
                         player.fire(self.actors_list["fire"],
-                                    self.image_player_fire)
-                    if button == preferences.j_bt_player_play:
+                                    self.image_player_fire["fire"])
+                    elif button == preferences.j_bt_secondary_fire:
+                        sw = player.get_selected_secondary_weapon()
+                        if sw == None:
+                            continue
+                        player.fire(self.actors_list["fire"],
+                            self.image_player_fire[sw.get_type()], False)
+                    elif button == preferences.j_bt_player_play:
                         self.music_player.play()
-                    if button == preferences.j_bt_player_stop:
+                    elif button == preferences.j_bt_player_stop:
                         self.music_player.stop()
-                    if button == preferences.j_bt_player_next_track:
+                    elif button == preferences.j_bt_player_next_track:
                         self.music_player.next_track()
+                    elif button == preferences.j_bt_prev_secondary_weapon:
+                        player.prev_secondary_weapon()
+                    elif button == preferences.j_bt_next_secondary_weapon:
+                        player.next_secondary_weapon()
 
                 if preferences.input == "joystick_analogic":
                     if type == JOYAXISMOTION and joy_id == preferences.joy_id:
@@ -280,13 +313,15 @@ class Game:
 
         # check if the actor is a sprite
         elif isinstance(actor, pygame.sprite.Sprite):
-            # third argument is dokill (if true the object will be killed
-            collided_list = pygame.sprite.spritecollide(actor, actors_list, 1)
+            # third argument is dokill (if true the object will be killed)
+            collided_list = pygame.sprite.spritecollide(actor, actors_list, 0)
             for obj in collided_list:
                 if isinstance(obj, PowerUp):
-                    action(obj.get_type(), obj.get_special())
+                    if action(obj.get_type(), obj.get_special()):
+                        obj.kill()
                 else:
                     action()
+                    obj.kill()
             return actor.is_dead()
 
     def actors_act(self):
@@ -345,16 +380,16 @@ class Game:
                 enemy.set_pos(pos)
                 # add sprite to group
                 self.actors_list["enemies"].add(enemy)
-            elif element.type == "first_aid_kit":
-                first_aid = FirstAidKit([0,0], element.life,
-                                        [element.speed_x, element.speed_y],
-                                        int(element.special),
-                                        self.image_first_aid_kit)
-                size = first_aid.get_size()
+            elif element.type in ["first_aid_kit", "sw_mult", "sw_frag"]:
+                powerup = PowerUp([0,0], element.life,
+                                  [element.speed_x, element.speed_y],
+                                  element.type, element.special,
+                                  self.image_powerup[element.type])
+                size = powerup.get_size()
                 y = Random.randint(size[1] / 2, self.screen_size[1] - size[1] / 2)
                 pos = [self.screen_size[0] + size[0] / 2, y]
-                first_aid.set_pos(pos)
-                self.actors_list["powerups"].add(first_aid)
+                powerup.set_pos(pos)
+                self.actors_list["powerups"].add(powerup)
             else:
                 print "Not an enemy, will be handled soon! ;)"
 

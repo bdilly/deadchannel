@@ -15,7 +15,7 @@ import xml.dom
 import xml.dom.minidom
 
 class Callable:
-    
+
     def __init__(self, anycallable):
         self.__call__ = anycallable
 
@@ -59,8 +59,12 @@ class Stage:
         nextx = self.getNextX()
         while nextx == position:
             subList.append(self.L.pop())
-            nextx = self.getNextX()   
+            nextx = self.getNextX()
         return subList
+
+    def get_special(self, nodes):
+        node = nodes.getElementsByTagName("special")[0].childNodes[0].nodeValue
+        return node.split(',')
 
     def buildStage(self):
         for nodes in self.data.getElementsByTagName("item"):
@@ -74,7 +78,7 @@ class Stage:
             image = nodes.getElementsByTagName("image")[0].childNodes[0].nodeValue
             itemType = nodes.getElementsByTagName("type")[0].childNodes[0].nodeValue
             behaviour = nodes.getElementsByTagName("behaviour")[0].childNodes[0].nodeValue
-            special = nodes.getElementsByTagName("special")[0].childNodes[0].nodeValue
+            special = self.get_special(nodes)
             item = Item(x, y, speed_x, speed_y, rot, rotspeed, life, image,
                         itemType, behaviour, special)
             self.include(item)

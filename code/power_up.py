@@ -55,9 +55,9 @@ class PowerUp(GameObject):
 
     def get_special(self):
         """
-        FIXME: this method should be at each derivated class.
-        For example, for life, it is just an integer with the amount of life
-        the avatar will receive. For a weapon, it should be a list with
-        the type of weapon, and ammunition.
+        Returns a list wich content depends on type.
+        For 'first_aid_kit' it will returns a single element, the life bonus.
+        For secondary weapons this list has a name, ammunition, distance,
+        and other related to each kind of sw.
         """
         return self.special

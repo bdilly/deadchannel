@@ -40,16 +40,146 @@
 	<special>0</special>
 </item>
 <item>
-	<type>first_aid_kit</type>
+	<type>sw_mult</type>
 	<x>300</x>
 	<y>10</y>
 	<speed_x>-3</speed_x>
 	<speed_y>0</speed_y>
 	<rot>0</rot>
 	<rotspeed>0</rotspeed>
-	<life>2000</life>
+	<life>3000</life>
+	<image>none</image>
+	<behaviour>none</behaviour>
+	<special>Stuck Duck, 20, 100, 400, 60, 3</special>
+</item>
+<item>
+	<type>first_aid_kit</type>
+	<x>350</x>
+	<y>10</y>
+	<speed_x>-2</speed_x>
+	<speed_y>1</speed_y>
+	<rot>0</rot>
+	<rotspeed>0</rotspeed>
+	<life>5000</life>
 	<image>none</image>
 	<behaviour>none</behaviour>
 	<special>3</special>
+</item>
+<item>
+	<type>sw_frag</type>
+	<x>400</x>
+	<y>10</y>
+	<speed_x>-4</speed_x>
+	<speed_y>0</speed_y>
+	<rot>0</rot>
+	<rotspeed>0</rotspeed>
+	<life>2000</life>
+	<image>none</image>
+	<behaviour>none</behaviour>
+	<special>Last Kiss, 10, 10, 150, 4</special>
+</item>
+<item>
+	<type>sw_mult</type>
+	<x>500</x>
+	<y>10</y>
+	<speed_x>-3</speed_x>
+	<speed_y>0</speed_y>
+	<rot>0</rot>
+	<rotspeed>0</rotspeed>
+	<life>4000</life>
+	<image>none</image>
+	<behaviour>none</behaviour>
+	<special>Psycho Killer, 100, 100, 400, 360, 10</special>
+</item>
+<item>
+	<type>sw_mult</type>
+	<x>580</x>
+	<y>10</y>
+	<speed_x>-3</speed_x>
+	<speed_y>0</speed_y>
+	<rot>0</rot>
+	<rotspeed>0</rotspeed>
+	<life>4000</life>
+	<image>none</image>
+	<behaviour>none</behaviour>
+	<special>Psycho Killer, 20, 100, 400, 360, 10</special>
+</item>
+<item>
+	<type>enemy</type>
+	<x>800</x>
+	<y>388</y>
+	<speed_x>0</speed_x>
+	<speed_y>0</speed_y>
+	<rot>20</rot>
+	<rotspeed>20</rotspeed>
+	<life>1</life>
+	<image>none</image>
+	<behaviour>normal</behaviour>
+	<special>0</special>
+</item>
+<item>
+	<type>enemy</type>
+	<x>900</x>
+	<y>200</y>
+	<speed_x>0</speed_x>
+	<speed_y>0</speed_y>
+	<rot>40</rot>
+	<rotspeed>0</rotspeed>
+	<life>1</life>
+	<image>none</image>
+	<behaviour>normal</behaviour>
+	<special>0</special>
+</item>
+<item>
+	<type>enemy</type>
+	<x>1200</x>
+	<y>200</y>
+	<speed_x>0</speed_x>
+	<speed_y>0</speed_y>
+	<rot>40</rot>
+	<rotspeed>0</rotspeed>
+	<life>1</life>
+	<image>none</image>
+	<behaviour>normal</behaviour>
+	<special>0</special>
+</item>
+<item>
+	<type>enemy</type>
+	<x>1300</x>
+	<y>200</y>
+	<speed_x>0</speed_x>
+	<speed_y>0</speed_y>
+	<rot>40</rot>
+	<rotspeed>0</rotspeed>
+	<life>1</life>
+	<image>none</image>
+	<behaviour>normal</behaviour>
+	<special>0</special>
+</item>
+<item>
+	<type>enemy</type>
+	<x>1400</x>
+	<y>200</y>
+	<speed_x>0</speed_x>
+	<speed_y>0</speed_y>
+	<rot>40</rot>
+	<rotspeed>0</rotspeed>
+	<life>1</life>
+	<image>none</image>
+	<behaviour>normal</behaviour>
+	<special>0</special>
+</item>
+<item>
+	<type>enemy</type>
+	<x>1500</x>
+	<y>200</y>
+	<speed_x>0</speed_x>
+	<speed_y>0</speed_y>
+	<rot>40</rot>
+	<rotspeed>0</rotspeed>
+	<life>1</life>
+	<image>none</image>
+	<behaviour>normal</behaviour>
+	<special>0</special>
 </item>
 </fase>
