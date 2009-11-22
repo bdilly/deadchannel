@@ -51,6 +51,7 @@ class GameObject(pygame.sprite.Sprite):
         move_speed = (self.speed[0] * dt / 16, self.speed[1] * dt / 16)
         self.rect = self.rect.move(move_speed)
         if (self.rect.right < self.area.left) or \
+            (self.rect.left > self.area.right) or \
             (self.rect.bottom < self.area.top) or \
             (self.rect.top > self.area.bottom):
             self.kill()

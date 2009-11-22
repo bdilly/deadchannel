@@ -43,10 +43,9 @@ class Actor(GameObject):
         """
         Kill object if life reaches 0 when colliding
         """
+        self.set_life(self.get_life() -1)
         if self.get_life() == 0:
             self.kill()
-        else:
-            self.set_life(self.get_life() -1)
 
     def is_dead(self):
         """

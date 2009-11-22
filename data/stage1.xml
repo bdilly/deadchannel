@@ -28,7 +28,7 @@
 	<rotspeed>20</rotspeed>
 	<life>1</life>
 	<image>none</image>
-	<behaviour>normal</behaviour>
+	<behaviour>fast</behaviour>
 	<special>0</special>
 </item>
 <item>
@@ -115,6 +115,19 @@
 	<special>Psycho Killer, 20, 100, 400, 360, 10</special>
 </item>
 <item>
+	<type>sw_guided</type>
+	<x>700</x>
+	<y>10</y>
+	<speed_x>-4</speed_x>
+	<speed_y>0</speed_y>
+	<rot>0</rot>
+	<rotspeed>0</rotspeed>
+	<life>2000</life>
+	<image>none</image>
+	<behaviour>none</behaviour>
+	<special>Seek and Destroy, 45, 50, 150</special>
+</item>
+<item>
 	<type>enemy</type>
 	<x>800</x>
 	<y>388</y>
@@ -124,7 +137,7 @@
 	<rotspeed>20</rotspeed>
 	<life>1</life>
 	<image>none</image>
-	<behaviour>normal</behaviour>
+	<behaviour>diagonal</behaviour>
 	<special>0</special>
 </item>
 <item>
@@ -158,7 +171,7 @@
 	<speed_y>0</speed_y>
 	<rot>40</rot>
 	<rotspeed>0</rotspeed>
-	<life>1</life>
+	<life>2</life>
 	<image>none</image>
 	<behaviour>normal</behaviour>
 	<special>0</special>
@@ -171,9 +184,9 @@
 	<speed_y>0</speed_y>
 	<rot>40</rot>
 	<rotspeed>0</rotspeed>
-	<life>1</life>
+	<life>2</life>
 	<image>none</image>
-	<behaviour>normal</behaviour>
+	<behaviour>fast</behaviour>
 	<special>0</special>
 </item>
 <item>
@@ -184,7 +197,7 @@
 	<speed_y>0</speed_y>
 	<rot>40</rot>
 	<rotspeed>0</rotspeed>
-	<life>1</life>
+	<life>3</life>
 	<image>none</image>
 	<behaviour>normal</behaviour>
 	<special>0</special>
@@ -197,9 +210,35 @@
 	<speed_y>0</speed_y>
 	<rot>40</rot>
 	<rotspeed>0</rotspeed>
-	<life>1</life>
+	<life>3</life>
+	<image>none</image>
+	<behaviour>diagonal</behaviour>
+	<special>0</special>
+</item>
+<item>
+	<type>enemy</type>
+	<x>1800</x>
+	<y>200</y>
+	<speed_x>0</speed_x>
+	<speed_y>0</speed_y>
+	<rot>40</rot>
+	<rotspeed>0</rotspeed>
+	<life>3</life>
 	<image>none</image>
 	<behaviour>normal</behaviour>
+	<special>0</special>
+</item>
+<item>
+	<type>enemy</type>
+	<x>2000</x>
+	<y>200</y>
+	<speed_x>0</speed_x>
+	<speed_y>0</speed_y>
+	<rot>40</rot>
+	<rotspeed>0</rotspeed>
+	<life>3</life>
+	<image>none</image>
+	<behaviour>diagonal</behaviour>
 	<special>0</special>
 </item>
 </fase>

@@ -94,10 +94,10 @@ class Game:
         self.image_enemy_fire = load_image("enemy_fire.png")
         self.image_life = load_image("life.png")
         self.image_powerup = {}
-        for image in ["first_aid_kit", "sw_mult", "sw_frag"]:
+        for image in ["first_aid_kit", "sw_mult", "sw_frag", "sw_guided"]:
             self.image_powerup[image] = load_image(image+".png")
         self.image_player_fire = {}
-        for image in ["fire", "sw_mult", "sw_frag"]:
+        for image in ["fire", "sw_mult", "sw_frag", "sw_guided"]:
             self.image_player_fire[image] = load_image("player_"+image+".png")
 
     def handle_events(self):
@@ -171,7 +171,8 @@ class Game:
                             if sw == None:
                                 continue
                             player.fire(self.actors_list["fire"],
-                                self.image_player_fire[sw.get_type()], False)
+                                self.image_player_fire[sw.get_type()], False,
+                                self.actors_list["enemies"])
                         elif key == preferences.key_rot_clock:
                             player.rotate_clock(self.rot_accel)
                         elif key == preferences.key_rot_anti_clock:
@@ -193,7 +194,8 @@ class Game:
                             if sw == None:
                                 continue
                             player.fire(self.actors_list["fire"],
-                                self.image_player_fire[sw.get_type()], False)
+                                self.image_player_fire[sw.get_type()], False,
+                                self.actors_list["enemies"])
                         elif button == preferences.mouse_prev_secondary_weapon:
                             player.prev_secondary_weapon()
                         elif button == preferences.mouse_next_secondary_weapon:
@@ -224,7 +226,8 @@ class Game:
                         if sw == None:
                             continue
                         player.fire(self.actors_list["fire"],
-                            self.image_player_fire[sw.get_type()], False)
+                            self.image_player_fire[sw.get_type()], False,
+                            self.actors_list["enemies"])
                     elif button == preferences.j_bt_player_play:
                         self.music_player.play()
                     elif button == preferences.j_bt_player_stop:
@@ -378,7 +381,8 @@ class Game:
                 enemy.set_pos(pos)
                 # add sprite to group
                 self.actors_list["enemies"].add(enemy)
-            elif element.type in ["first_aid_kit", "sw_mult", "sw_frag"]:
+            elif element.type in ["first_aid_kit", "sw_mult", "sw_frag",
+                                  "sw_guided"]:
                 powerup = PowerUp([0,0], element.life,
                                   [element.speed_x, element.speed_y],
                                   element.type, element.special,

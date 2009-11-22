@@ -12,7 +12,7 @@
 
 import math
 from actor import Actor
-from bullet import Bullet, FragmentaryBullet
+from bullet import Bullet, FragmentaryBullet, GuidedBullet
 from secondary_weapon import SecondaryWeapon, MultipleShotWeapon, \
                              FragmentaryGrenade
 
@@ -77,7 +77,7 @@ class Player(Actor):
         self.life = life
         return True
 
-    def fire(self, fire_list, image, primary=True):
+    def fire(self, fire_list, image, primary=True, enemy_list=None):
         """
         Fire a bullet if primary is True, or use secondary weapon
         """
@@ -110,6 +110,12 @@ class Player(Actor):
                     y = speed * math.sin(math.radians(b_angle))
                     Bullet(pos, [x, y], image = image, list = fire_list,
                            distance = weapon.get_distance())
+            elif weapon.type == "sw_guided":
+                if not weapon.decrease_ammo(1):
+                    self.drop_secondary_weapon(weapon)
+                    return
+                GuidedBullet(pos, [x, y], image = image, list = fire_list,
+                             enemy_list = enemy_list)
 
     def get_powerup(self, type, special):
         """
@@ -124,6 +130,8 @@ class Player(Actor):
                 sw = MultipleShotWeapon(type, special)
             elif type == "sw_frag":
                 sw = FragmentaryGrenade(type, special)
+            else:
+                sw = SecondaryWeapon(type, special)
             return self.get_secondary_weapon(sw)
 
     def get_first_aid_kit(self, bonus_life):
