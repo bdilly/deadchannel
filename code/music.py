@@ -12,6 +12,7 @@
 
 import os
 import glob
+import random
 
 import pygame
 from pygame.locals import *
@@ -28,8 +29,9 @@ class Music_player:
         Initializes music playback
         """
         # Fills the playlist
-        # TODO
         self.playlist = glob.glob(os.path.join('music', '*.ogg'))
+        # Shuffles playlist
+        random.shuffle(self.playlist)
         pygame.mixer.music.set_volume(volume)
         # The music player need a reference to the hud to show track info
         self.hud = hud
