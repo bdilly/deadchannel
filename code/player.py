@@ -20,6 +20,8 @@ class Player(Actor):
     sw_list = []
     sw_selected = -1
     max_life = 10
+    cooldown = 30
+    warm = 30
     """
     Represents the player avatar.
     """
@@ -55,6 +57,10 @@ class Player(Actor):
         elif (self.rect.top < 0):
             self.rect.top = 0
 
+        self.cooldown += ms
+        for w in self.sw_list:
+            w.set_cooldown(w.get_cooldown() + ms)
+
     def get_xp(self):
         """
         Return experience points
@@ -87,9 +93,18 @@ class Player(Actor):
         x = speed * math.cos(math.radians(rot))
         y = speed * math.sin(math.radians(rot))
         if primary:
-            Bullet(pos, [x, y], image = image, list = fire_list)
+            if self.cooldown >= self.warm:
+                self.cooldown -= self.warm
+                Bullet(pos, [x, y], image = image, list = fire_list)
         else:
             weapon = self.get_selected_secondary_weapon()
+            # verifies if the weapon can be used. if not, cooldown
+            # goes to 0 and the player will need to wait more  =)
+            if weapon.get_cooldown() >= weapon.get_warm():
+                weapon.set_cooldown(weapon.get_cooldown() - weapon.get_warm())
+            else:
+                weapon.set_cooldown(0)
+                return
             if isinstance(weapon, FragmentaryGrenade):
                 if not weapon.decrease_ammo(1):
                     self.drop_secondary_weapon(weapon)
