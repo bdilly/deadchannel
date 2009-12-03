@@ -56,8 +56,10 @@ class Game:
         pygame.mouse.set_visible(False)
         # grabs the mouse, so pygame has complete control over it
         pygame.event.set_grab(True)
-        # set title windows
-        pygame.display.set_caption('Dead Channel');
+        # set title windows and icon
+        win_icon = self.load_image("win_icon.png")
+        pygame.display.set_caption('Dead Channel')
+        pygame.display.set_icon(win_icon)
 
         # initialize joysticks
         self.init_joysticks()
@@ -72,33 +74,33 @@ class Game:
             joystick = pygame.joystick.Joystick(j)
             joystick.init()
 
+    def load_image(self, filename):
+        img = pygame.image.load(os.path.join('graphic', filename))
+        # disable alpha, it the image contains an alpha layer
+        img.set_alpha(None, RLEACCEL)
+        img = img.convert()
+        # colorkey is the color value that will be reference transparency
+        img.set_colorkey((255,255,255), RLEACCEL)
+        return img
+
     def load_images(self):
         """
         Load all image files and convert, setting the colorkey
         """
-        def load_image(filename):
-            img = pygame.image.load(os.path.join('graphic', filename))
-            # disable alpha, it the image contains an alpha layer
-            img.set_alpha(None, RLEACCEL)
-            img = img.convert()
-            # colorkey is the color value that will be reference transparency
-            img.set_colorkey((255,255,255), RLEACCEL)
-            return img
-
         self.image_player = []
         for image in ["player_0.png", "player_45.png", "player_90.png",
                       "player_135.png", "player_180.png", "player_225.png",
                       "player_270.png", "player_315.png"]:
-            self.image_player.append(load_image(image))
-        self.image_enemy = load_image("enemy.png")
-        self.image_enemy_fire = load_image("enemy_fire.png")
-        self.image_life = load_image("life.png")
+            self.image_player.append(self.load_image(image))
+        self.image_enemy = self.load_image("enemy.png")
+        self.image_enemy_fire = self.load_image("enemy_fire.png")
+        self.image_life = self.load_image("life.png")
         self.image_powerup = {}
         for image in ["first_aid_kit", "sw_mult", "sw_frag", "sw_guided"]:
-            self.image_powerup[image] = load_image(image+".png")
+            self.image_powerup[image] = self.load_image(image+".png")
         self.image_player_fire = {}
         for image in ["fire", "sw_mult", "sw_frag", "sw_guided"]:
-            self.image_player_fire[image] = load_image("player_"+image+".png")
+            self.image_player_fire[image] = self.load_image("player_"+image+".png")
 
     def handle_events(self):
         """
