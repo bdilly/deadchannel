@@ -60,7 +60,7 @@
 	<life>3000</life>
 	<image>none</image>
 	<behaviour>none</behaviour>
-	<special>Stuck Duck, 20, 100, 400, 300, 300, 60, 3</special>
+	<special>Stuck Duck, 20, 100, 400, 300, 300, 0, 60, 3</special>
 </item>
 <item>
 	<type>first_aid_kit</type>
@@ -86,7 +86,7 @@
 	<life>2000</life>
 	<image>none</image>
 	<behaviour>none</behaviour>
-	<special>Last Kiss, 10, 10, 150, 600, 600, 4</special>
+	<special>Last Kiss, 10, 10, 450, 600, 600, 1000, 4</special>
 </item>
 <item>
 	<type>sw_mult</type>
@@ -99,7 +99,7 @@
 	<life>4000</life>
 	<image>none</image>
 	<behaviour>none</behaviour>
-	<special>Psycho Killer, 100, 100, 400, 300, 300, 360, 10</special>
+	<special>Psycho Killer, 100, 100, 400, 300, 300, 0, 360, 10</special>
 </item>
 <item>
 	<type>sw_mult</type>
@@ -112,7 +112,7 @@
 	<life>4000</life>
 	<image>none</image>
 	<behaviour>none</behaviour>
-	<special>Psycho Killer, 20, 100, 400, 300, 300, 360, 10</special>
+	<special>Psycho Killer, 20, 100, 400, 300, 300, 0, 360, 10</special>
 </item>
 <item>
 	<type>sw_guided</type>
@@ -125,7 +125,7 @@
 	<life>2000</life>
 	<image>none</image>
 	<behaviour>none</behaviour>
-	<special>Seek and Destroy, 45, 50, 150, 900, 300</special>
+	<special>Seek and Destroy, 45, 50, 150, 900, 300, 0</special>
 </item>
 <item>
 	<type>enemy</type>

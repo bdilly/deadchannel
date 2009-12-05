@@ -35,6 +35,7 @@ class Game:
     actors_list = None
     player = None
     player_firing = False
+    player_charging = 0
     rot_accel = 2
 
     def __init__(self, preferences):
@@ -103,13 +104,14 @@ class Game:
         for image in ["fire", "sw_mult", "sw_frag", "sw_guided"]:
             self.image_player_fire[image] = self.load_image("player_"+image+".png")
 
-    def handle_events(self):
+    def handle_events(self, ms):
         """
         Handle user's events.
         """
         player = self.player
         preferences = self.preferences
         player_fire = False
+        self.player_charging += ms
 
         for event in pygame.event.get():
             type = event.type
@@ -171,12 +173,7 @@ class Game:
                             player_fire = True
                             self.player_firing = True
                         elif key == preferences.key_secondary_fire:
-                            sw = player.get_selected_secondary_weapon()
-                            if sw == None:
-                                continue
-                            player.fire(self.actors_list["fire"],
-                                self.image_player_fire[sw.get_type()], False,
-                                self.actors_list["enemies"])
+                            self.player_charging = 0
                         elif key == preferences.key_rot_clock:
                             player.rotate_clock(self.rot_accel)
                         elif key == preferences.key_rot_anti_clock:
@@ -188,6 +185,14 @@ class Game:
                             player.rotate_clock(self.rot_accel)
                         elif key == preferences.key_fire:
                             self.player_firing = False
+                        elif key == preferences.key_secondary_fire:
+                            sw = player.get_selected_secondary_weapon()
+                            if sw == None:
+                                continue
+                            player.fire(self.actors_list["fire"],
+                                self.image_player_fire[sw.get_type()], False,
+                                self.actors_list["enemies"],
+                                self.player_charging)
 
                 elif preferences.input == "mouse":
                     if type == MOUSEBUTTONDOWN:
@@ -196,12 +201,7 @@ class Game:
                             player_fire = True
                             self.player_firing = True
                         elif button == preferences.mouse_secondary_fire:
-                            sw = player.get_selected_secondary_weapon()
-                            if sw == None:
-                                continue
-                            player.fire(self.actors_list["fire"],
-                                self.image_player_fire[sw.get_type()], False,
-                                self.actors_list["enemies"])
+                            self.player_charging = 0
                         elif button == preferences.mouse_prev_secondary_weapon:
                             player.prev_secondary_weapon()
                         elif button == preferences.mouse_next_secondary_weapon:
@@ -209,6 +209,15 @@ class Game:
                     elif type == MOUSEBUTTONUP:
                         if button == preferences.mouse_fire:
                             self.player_firing = False
+                        elif button == preferences.mouse_secondary_fire:
+                            sw = player.get_selected_secondary_weapon()
+                            if sw == None:
+                                continue
+                            player.fire(self.actors_list["fire"],
+                                self.image_player_fire[sw.get_type()], False,
+                                self.actors_list["enemies"],
+                                self.player_charging)
+
                     elif type == MOUSEMOTION:
                         # rel is a tuple with x and y relative movements
                         # if player move the cursor down or left, it has
@@ -231,12 +240,7 @@ class Game:
                         player_fire = True
                         self.player_firing = True
                     elif button == preferences.j_bt_secondary_fire:
-                        sw = player.get_selected_secondary_weapon()
-                        if sw == None:
-                            continue
-                        player.fire(self.actors_list["fire"],
-                            self.image_player_fire[sw.get_type()], False,
-                            self.actors_list["enemies"])
+                        self.player_charging = 0
                     elif button == preferences.j_bt_player_play:
                         self.music_player.play()
                     elif button == preferences.j_bt_player_stop:
@@ -250,6 +254,15 @@ class Game:
                 elif type == JOYBUTTONUP and joy_id == preferences.joy_id:
                     if button == preferences.j_bt_fire:
                         self.player_firing = False
+                    elif button == preferences.j_bt_secondary_fire:
+                        sw = player.get_selected_secondary_weapon()
+                        if sw == None:
+                            continue
+                        player.fire(self.actors_list["fire"],
+                            self.image_player_fire[sw.get_type()], False,
+                            self.actors_list["enemies"],
+                            self.player_charging)
+
 
                 if preferences.input == "joystick_analogic":
                     if type == JOYAXISMOTION and joy_id == preferences.joy_id:
@@ -457,7 +470,7 @@ class Game:
             ms = clock.tick(1000/dt)
 
             # handle input
-            self.handle_events()
+            self.handle_events(ms)
             # update all the game elements
             self.actors_update(dt, ms)
             self.actors_act()

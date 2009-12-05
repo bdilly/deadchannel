@@ -21,6 +21,7 @@ class SecondaryWeapon:
         self.max_cooldown = int(attributes[4])
         self.cooldown = self.max_cooldown
         self.warm = int(attributes[5])
+        self.max_charge = int(attributes[6])
 
     def get_name(self):
         return self.name
@@ -51,6 +52,9 @@ class SecondaryWeapon:
     def get_warm(self):
         return self.warm
 
+    def get_max_charge(self):
+        return self.max_charge
+
     def increase_ammo(self, ammo):
         """
         Increase ammunition or return False if no more ammo can be carried
@@ -75,8 +79,8 @@ class SecondaryWeapon:
 class MultipleShotWeapon(SecondaryWeapon):
     def __init__(self, type, attributes):
         SecondaryWeapon.__init__(self, type, attributes)
-        self.radius = int(attributes[6])
-        self.simultaneous_shoots = int(attributes[7])
+        self.radius = int(attributes[7])
+        self.simultaneous_shoots = int(attributes[8])
 
     def get_radius(self):
         return self.radius
@@ -87,7 +91,7 @@ class MultipleShotWeapon(SecondaryWeapon):
 class FragmentaryGrenade(SecondaryWeapon):
     def __init__(self, type, attributes):
         SecondaryWeapon.__init__(self, type, attributes)
-        self.fragments = int(attributes[6])
+        self.fragments = int(attributes[7])
 
     def get_fragments(self):
         return self.fragments
