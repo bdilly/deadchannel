@@ -19,7 +19,7 @@ import os
 # imports parser for command line arguments in sys.argv
 import getopt
 
-def help():
+def help_message():
     """
     Prints basic help for this game.
     """
@@ -50,7 +50,7 @@ def parse_opts(argv):
     for o, a in opts:
         if o in ("-h", "--help"):
             usage()
-            help()
+            help_message()
             sys.exit(0)
 
 def main(argv):
@@ -59,9 +59,9 @@ def main(argv):
     """
     # set directories and files
     abspath = os.path.abspath(argv[0])
-    dir = os.path.dirname(abspath)
-    DATADIR = os.path.join(dir, 'data')
-    CODEDIR = os.path.join(dir, 'code')
+    tmpdir = os.path.dirname(abspath)
+    DATADIR = os.path.join(tmpdir, 'data')
+    CODEDIR = os.path.join(tmpdir, 'code')
     DEFPREFFILE = os.path.join(DATADIR, 'default_preferences.cfg')
     if os.name == 'posix':
         HOMEDIR = os.environ['HOME']

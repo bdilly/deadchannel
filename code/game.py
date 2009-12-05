@@ -48,10 +48,10 @@ class Game:
         self.preferences = preferences
         pygame.init()
         flags = DOUBLEBUF
-        if preferences.fullscreen:
+        if preferences.screen_fullscreen:
             flags |= FULLSCREEN
         # create display
-        self.screen = pygame.display.set_mode(preferences.resolution, flags)
+        self.screen = pygame.display.set_mode(preferences.screen_resolution, flags)
         self.screen_size = self.screen.get_size()
 
         # make mouse cursor invisible
@@ -137,57 +137,57 @@ class Game:
                 if key == K_ESCAPE:
                     self.run = False
 
-            if preferences.input in ("mouse", "keyboard"):
+            if preferences.general_input in ("mouse", "keyboard"):
                 if type == KEYDOWN:
-                    if key == preferences.key_up:
+                    if key == preferences.keyboard_up:
                         player.accel_top()
-                    elif key == preferences.key_down:
+                    elif key == preferences.keyboard_down:
                         player.accel_bottom()
-                    elif key == preferences.key_right:
+                    elif key == preferences.keyboard_right:
                         player.accel_right()
-                    elif key == preferences.key_left:
+                    elif key == preferences.keyboard_left:
                         player.accel_left()
-                    elif key == preferences.key_player_play:
+                    elif key == preferences.keyboard_player_play:
                         self.music_player.play()
-                    elif key == preferences.key_player_stop:
+                    elif key == preferences.keyboard_player_stop:
                         self.music_player.stop()
-                    elif key == preferences.key_player_next_track:
+                    elif key == preferences.keyboard_player_next_track:
                         self.music_player.next_track()
-                    elif key == preferences.key_prev_secondary_weapon:
+                    elif key == preferences.keyboard_prev_secondary_weapon:
                         player.prev_secondary_weapon()
-                    elif key == preferences.key_next_secondary_weapon:
+                    elif key == preferences.keyboard_next_secondary_weapon:
                         player.next_secondary_weapon()
-                    elif key == preferences.key_toogle_fullscreen:
+                    elif key == preferences.keyboard_toogle_fullscreen:
                         pygame.display.toggle_fullscreen()
                 elif type == KEYUP:
-                    if key == preferences.key_down:
+                    if key == preferences.keyboard_down:
                         player.accel_top()
-                    elif key == preferences.key_up:
+                    elif key == preferences.keyboard_up:
                         player.accel_bottom()
-                    elif key == preferences.key_left:
+                    elif key == preferences.keyboard_left:
                         player.accel_right()
-                    elif key == preferences.key_right:
+                    elif key == preferences.keyboard_right:
                         player.accel_left()
 
-                if preferences.input == "keyboard":
+                if preferences.general_input == "keyboard":
                     if type == KEYDOWN:
-                        if key == preferences.key_fire:
+                        if key == preferences.keyboard_fire:
                             player_fire = True
                             self.player_firing = True
-                        elif key == preferences.key_secondary_fire:
+                        elif key == preferences.keyboard_secondary_fire:
                             self.player_charging = 0
-                        elif key == preferences.key_rot_clock:
+                        elif key == preferences.keyboard_rot_clock:
                             player.rotate_clock(self.rot_accel)
-                        elif key == preferences.key_rot_anti_clock:
+                        elif key == preferences.keyboard_rot_anti_clock:
                             player.rotate_clock(-self.rot_accel)
                     elif type == KEYUP:
-                        if key == preferences.key_rot_clock:
+                        if key == preferences.keyboard_rot_clock:
                             player.rotate_clock(-self.rot_accel)
-                        elif key == preferences.key_rot_anti_clock:
+                        elif key == preferences.keyboard_rot_anti_clock:
                             player.rotate_clock(self.rot_accel)
-                        elif key == preferences.key_fire:
+                        elif key == preferences.keyboard_fire:
                             self.player_firing = False
-                        elif key == preferences.key_secondary_fire:
+                        elif key == preferences.keyboard_secondary_fire:
                             sw = player.get_selected_secondary_weapon()
                             if sw == None:
                                 continue
@@ -196,7 +196,7 @@ class Game:
                                 self.actors_list["enemies"],
                                 self.player_charging)
 
-                elif preferences.input == "mouse":
+                elif preferences.general_input == "mouse":
                     if type == MOUSEBUTTONDOWN:
                         # mouse left button is 1, middle is 2, and right is 3
                         if button == preferences.mouse_fire:
@@ -235,28 +235,28 @@ class Game:
                                              preferences.mouse_sensitivity)
                             player.set_rotation(rot)
 
-            elif preferences.input in ("joystick_analogic",
+            elif preferences.general_input in ("joystick_analogic",
                                        "joystick_d-pad"):
-                if type == JOYBUTTONDOWN and joy_id == preferences.joy_id:
-                    if button == preferences.j_bt_fire:
+                if type == JOYBUTTONDOWN and joy_id == preferences.joystick_id:
+                    if button == preferences.joystick_fire:
                         player_fire = True
                         self.player_firing = True
-                    elif button == preferences.j_bt_secondary_fire:
+                    elif button == preferences.joystick_secondary_fire:
                         self.player_charging = 0
-                    elif button == preferences.j_bt_player_play:
+                    elif button == preferences.joystick_player_play:
                         self.music_player.play()
-                    elif button == preferences.j_bt_player_stop:
+                    elif button == preferences.joystick_player_stop:
                         self.music_player.stop()
-                    elif button == preferences.j_bt_player_next_track:
+                    elif button == preferences.joystick_player_next_track:
                         self.music_player.next_track()
-                    elif button == preferences.j_bt_prev_secondary_weapon:
+                    elif button == preferences.joystick_prev_secondary_weapon:
                         player.prev_secondary_weapon()
-                    elif button == preferences.j_bt_next_secondary_weapon:
+                    elif button == preferences.joystick_next_secondary_weapon:
                         player.next_secondary_weapon()
-                elif type == JOYBUTTONUP and joy_id == preferences.joy_id:
-                    if button == preferences.j_bt_fire:
+                elif type == JOYBUTTONUP and joy_id == preferences.joystick_id:
+                    if button == preferences.joystick_fire:
                         self.player_firing = False
-                    elif button == preferences.j_bt_secondary_fire:
+                    elif button == preferences.joystick_secondary_fire:
                         sw = player.get_selected_secondary_weapon()
                         if sw == None:
                             continue
@@ -266,41 +266,41 @@ class Game:
                             self.player_charging)
 
 
-                if preferences.input == "joystick_analogic":
-                    if type == JOYAXISMOTION and joy_id == preferences.joy_id:
+                if preferences.general_input == "joystick_analogic":
+                    if type == JOYAXISMOTION and joy_id == preferences.joystick_id:
                         if axis == preferences.j_axis_x:
-                            if abs(value) > preferences.joy_deadzone:
-                                h_speed = value * preferences.joy_sensitivity
+                            if abs(value) > preferences.joystick_deadzone:
+                                h_speed = value * preferences.joystick_sensitivity
                             else:
                                 h_speed = 0
                             player.set_speed([h_speed, player.get_speed()[1]])
                         elif axis == preferences.j_axis_y:
-                            if abs(value) > preferences.joy_deadzone:
-                                v_speed = value * preferences.joy_sensitivity
+                            if abs(value) > preferences.joystick_deadzone:
+                                v_speed = value * preferences.joystick_sensitivity
                             else:
                                 v_speed = 0
                             player.set_speed([player.get_speed()[0], v_speed])
                         elif axis == preferences.j_axis_z:
-                            if abs(value) < preferences.joy_deadzone:
+                            if abs(value) < preferences.joystick_deadzone:
                                 value = 0
-                            rot_speed = int(value* preferences.joy_sensitivity)
+                            rot_speed = int(value* preferences.joystick_sensitivity)
                             player.set_rotation_speed(rot_speed)
 
-                elif preferences.input == "joystick_d-pad":
-                    if type == JOYHATMOTION and joy_id == preferences.joy_id:
+                elif preferences.general_input == "joystick_d-pad":
+                    if type == JOYHATMOTION and joy_id == preferences.joystick_id:
                         accel = player.get_accel()
                         speed = [value[0] * accel[0], -value[1] * accel[1]]
                         player.set_speed(speed)
                     elif type == JOYBUTTONDOWN and \
-                         joy_id == preferences.joy_id:
-                        if button == preferences.j_bt_rot_clock:
+                         joy_id == preferences.joystick_id:
+                        if button == preferences.joystick_rot_clock:
                                 player.rotate_clock(self.rot_accel)
-                        elif button == preferences.j_bt_rot_anti_clock:
+                        elif button == preferences.joystick_rot_anti_clock:
                                 player.rotate_clock(-self.rot_accel)
-                    elif type == JOYBUTTONUP and joy_id == preferences.joy_id:
-                        if button == preferences.j_bt_rot_clock:
+                    elif type == JOYBUTTONUP and joy_id == preferences.joystick_id:
+                        if button == preferences.joystick_rot_clock:
                                 player.rotate_clock(-self.rot_accel)
-                        elif button == preferences.j_bt_rot_anti_clock:
+                        elif button == preferences.joystick_rot_anti_clock:
                                 player.rotate_clock(self.rot_accel)
 
         if player_fire or self.player_firing:
@@ -463,8 +463,9 @@ class Game:
 
         # loads music player
         self.music_player = Music_player(self.hud,
-            self.preferences.music_volume, self.preferences.default_setlist,
-            self.preferences.music_dir)
+            self.preferences.general_music_volume,
+            self.preferences.general_default_setlist,
+            self.preferences.general_music_dir)
         # loads next music
         self.music_player.load_next()
         # Starts playing music
