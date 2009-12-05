@@ -73,10 +73,11 @@ class Preferences(object):
           self.keyboard_up = 273
           self.keyboard_down = ...
         """
-        for section in self.conf.sections():
-            for item, value in self.conf.items(section):
-                attr_name   = "%s_%s" % (section, item)
-                attr_value  = self.parse_config_item(value)
-                self.__setattr__(attr_name, attr_value)
-                print section, item, attr_value
+        for conf in [self.default_conf, self.conf]:
+            for section in conf.sections():
+                for item, value in conf.items(section):
+                    attr_name   = "%s_%s" % (section, item)
+                    attr_value  = self.parse_config_item(value)
+                    self.__setattr__(attr_name, attr_value)
+                    print section, item, attr_value
 
