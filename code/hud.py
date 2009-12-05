@@ -2,10 +2,11 @@
 # -*- coding: utf-8 -*-
 
 #----------------------------------------------------------------------
-# Author:
+# Authors:
 #   Bruno Dilly <bruno.dilly@brunodilly.org>
+#   Thiago Borges Abdnur <bolaum@gmail.com>
 #
-# Copyright (C) 2009 Bruno Dilly
+# Copyright (C) 2009 Bruno Dilly and Thiago Borges Abdnur
 #
 # Released under GNU GPL, read the file 'COPYING' for more information
 # ----------------------------------------------------------------------
@@ -76,8 +77,28 @@ class HUD:
         info = self.track_info
         fcolor = (255, 255, 255)
 
-        text0 = "%s by %s"  % (info['title'][0], info['artist'][0])
-        text1 = "%s (%s)"   % (info['album'][0], info['date'][0])
+        if info.has_key('title'):
+            title = info['title'][0]
+        else:
+            title = "Unknown title"
+
+        if info.has_key('artist'):
+            artist = info['artist'][0]
+        else:
+            artist = "Unknown artist"
+
+        if info.has_key('album'):
+            album = info['album'][0]
+        else:
+            album = "Unknown album"
+
+        if info.has_key('date'):
+            date = "(%s)" % info['date'][0]
+        else:
+            date = ""
+
+        text0 = "%s by %s"  % (title, artist)
+        text1 = "%s %s"   % (album, date)Thiago Borges Abdnur <bolaum@gmail.com>
         # print "Rendering track info: %s" % text
         self.font.set_bold(True)
         image_track_ln0 = self.font.render(text0, True, fcolor)
