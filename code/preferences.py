@@ -11,10 +11,10 @@
 # ----------------------------------------------------------------------
 
 import ConfigParser
-import os
+import os, re
 import shutil
 
-class Preferences:
+class Preferences(object):
     def __init__(self, filename, default_filename):
         self.conf = ConfigParser.ConfigParser()
         self.default_conf = ConfigParser.ConfigParser()
@@ -35,6 +35,9 @@ class Preferences:
                 print "Warning: Not creating preferences backup file"
             self.copy_default(default_filename, filename)
 
+        # autogenerate the attributes for each item on the config file.
+        self.autogen_attributes()
+
     def copy_default(self, default_filename, filename):
         try:
             shutil.copy(default_filename, filename)
@@ -42,164 +45,38 @@ class Preferences:
         except IOError:
             print "Warning: preferences file couldn't be created"
 
-    def get(self, section, option):
-        if not self.conf.has_section(section) or \
-           not self.conf.has_option(section, option):
-            return self.default_conf.get(section, option)
-        return self.conf.get(section, option)
+    def parse_config_item(self, value):
+        """
+        Gather the type we're dealing with and return the value
+        on its real type.
+        """
+        resolution_type = lambda s: [ int(s.split("x")[0]),
+                                      int(s.split("x")[1]) ]
 
-    def get_resolution(self):
-        res = self.get('screen', 'resolution')
-        res  = res .lower()
-        res = res.split("x")
-        return [ int(res[0]), int(res[1])]
+        patterns = [ [resolution_type, re.compile("[0-9]+x[0-9]+")],
+                     [float, re.compile("[0-9]+\.[0-9]+")],
+                     [int, re.compile("[0-9]+")],
+                     [str, re.compile(".*")] ]
 
-    def get_fullscreen(self):
-        return self.get('screen', 'fullscreen')
+        for ty, regex in patterns:
+            if regex.match(value):
+                return ty(value)
 
-    def get_key_up(self):
-        return int(self.get('keyboard', 'up'))
+    def autogen_attributes(self):
+        """
+        Get tuples from ConfigParser and autogenerate attributes
+        based on the section and preference name, example:
+          [keyboard]
+            up = 273
+            down = ...
+        This should turn into:
+          self.keyboard_up = 273
+          self.keyboard_down = ...
+        """
+        for section in self.conf.sections():
+            for item, value in self.conf.items(section):
+                attr_name   = "%s_%s" % (section, item)
+                attr_value  = self.parse_config_item(value)
+                self.__setattr__(attr_name, attr_value)
+                print section, item, attr_value
 
-    def get_key_down(self):
-        return int(self.get('keyboard', 'down'))
-
-    def get_key_right(self):
-        return int(self.get('keyboard', 'right'))
-
-    def get_key_left(self):
-        return int(self.get('keyboard', 'left'))
-
-    def get_key_fire(self):
-        return int(self.get('keyboard', 'fire'))
-
-    def get_key_secondary_fire(self):
-        return int(self.get('keyboard', 'secondary_fire'))
-
-    def get_key_rot_clock(self):
-        return int(self.get('keyboard', 'rot_clock'))
-
-    def get_key_rot_anti_clock(self):
-        return int(self.get('keyboard', 'rot_anti_clock'))
-
-    def get_key_player_play(self):
-        return int(self.get('keyboard', 'player_play'))
-
-    def get_key_player_stop(self):
-        return int(self.get('keyboard', 'player_stop'))
-
-    def get_key_player_next_track(self):
-        return int(self.get('keyboard', 'player_next_track'))
-
-    def get_key_prev_secondary_weapon(self):
-        return int(self.get('keyboard', 'prev_secondary_weapon'))
-
-    def get_key_next_secondary_weapon(self):
-        return int(self.get('keyboard', 'next_secondary_weapon'))
-
-    def get_key_toogle_fullscreen(self):
-        return int(self.get('keyboard', 'toogle_fullscreen'))
-
-    def get_mouse_sensitivity(self):
-        return float(self.get('mouse', 'sensitivity'))
-
-    def get_mouse_fire(self):
-        return int(self.get('mouse', 'fire'))
-
-    def get_mouse_secondary_fire(self):
-        return int(self.get('mouse', 'secondary_fire'))
-
-    def get_mouse_prev_secondary_weapon(self):
-        return int(self.get('mouse', 'prev_secondary_weapon'))
-
-    def get_mouse_next_secondary_weapon(self):
-        return int(self.get('mouse', 'next_secondary_weapon'))
-
-    def get_joy_axis_x(self):
-        return int(self.get('joystick', 'axis_x'))
-
-    def get_joy_axis_y(self):
-        return int(self.get('joystick', 'axis_y'))
-
-    def get_joy_axis_z(self):
-        return int(self.get('joystick', 'axis_z'))
-
-    def get_joy_fire(self):
-        return int(self.get('joystick', 'fire'))
-
-    def get_joy_secondary_fire(self):
-        return int(self.get('joystick', 'secondary_fire'))
-
-    def get_joy_rot_clock(self):
-        return int(self.get('joystick', 'rot_clock'))
-
-    def get_joy_rot_anti_clock(self):
-        return int(self.get('joystick', 'rot_anti_clock'))
-
-    def get_joy_player_play(self):
-        return int(self.get('joystick', 'player_play'))
-
-    def get_joy_player_stop(self):
-        return int(self.get('joystick', 'player_stop'))
-
-    def get_joy_player_next_track(self):
-        return int(self.get('joystick', 'player_next_track'))
-
-    def get_joy_prev_secondary_weapon(self):
-        return int(self.get('joystick', 'prev_secondary_weapon'))
-
-    def get_joy_next_secondary_weapon(self):
-        return int(self.get('joystick', 'next_secondary_weapon'))
-
-    def get_joy_sensitivity(self):
-        return float(self.get('joystick', 'sensitivity'))
-
-    def get_joy_deadzone(self):
-        return float(self.get('joystick', 'deadzone'))
-
-    def get_joy_id(self):
-        return int(self.get('joystick', 'id'))
-
-    def get_input(self):
-        return self.get('general', 'input')
-
-    def get_music_volume(self):
-        return float(self.get('general', 'music_volume'))
-
-    fullscreen = property(get_fullscreen)
-    resolution = property(get_resolution)
-    key_up = property(get_key_up)
-    key_down = property(get_key_down)
-    key_right = property(get_key_right)
-    key_left = property(get_key_left)
-    key_fire = property(get_key_fire)
-    key_secondary_fire = property(get_key_secondary_fire)
-    key_rot_clock = property(get_key_rot_clock)
-    key_rot_anti_clock = property(get_key_rot_anti_clock)
-    key_player_play = property(get_key_player_play)
-    key_player_stop = property(get_key_player_stop)
-    key_player_next_track = property(get_key_player_next_track)
-    key_prev_secondary_weapon = property(get_key_prev_secondary_weapon)
-    key_next_secondary_weapon = property(get_key_next_secondary_weapon)
-    key_toogle_fullscreen = property(get_key_toogle_fullscreen)
-    mouse_sensitivity = property(get_mouse_sensitivity)
-    mouse_fire = property(get_mouse_fire)
-    mouse_secondary_fire = property(get_mouse_secondary_fire)
-    mouse_prev_secondary_weapon = property(get_mouse_prev_secondary_weapon)
-    mouse_next_secondary_weapon = property(get_mouse_next_secondary_weapon)
-    j_axis_x = property(get_joy_axis_x)
-    j_axis_y = property(get_joy_axis_y)
-    j_axis_z = property(get_joy_axis_z)
-    j_bt_fire = property(get_joy_fire)
-    j_bt_secondary_fire = property(get_joy_secondary_fire)
-    j_bt_rot_clock = property(get_joy_rot_clock)
-    j_bt_rot_anti_clock = property(get_joy_rot_anti_clock)
-    j_bt_player_play = property(get_joy_player_play)
-    j_bt_player_stop = property(get_joy_player_stop)
-    j_bt_player_next_track = property(get_joy_player_next_track)
-    j_bt_prev_secondary_weapon = property(get_joy_prev_secondary_weapon)
-    j_bt_next_secondary_weapon = property(get_joy_next_secondary_weapon)
-    joy_sensitivity = property(get_joy_sensitivity)
-    joy_deadzone = property(get_joy_deadzone)
-    joy_id = property(get_joy_id)
-    input = property(get_input)
-    music_volume = property(get_music_volume)
