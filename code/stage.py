@@ -95,7 +95,7 @@ class Stage:
         nextx = int(self.getNextX())
         while nextx == position:
             subList.append(self.L.pop())
-            nextx = self.getNextX()
+            nextx = int(self.getNextX())
         return subList
 
     def buildStage(self):
