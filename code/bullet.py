@@ -27,7 +27,7 @@ class Bullet(GameObject):
         if list != None:
             self.add(list)
 
-    def update(self, dt, ms):
+    def update(self, dt, ms, *args):
         GameObject.update(self, dt, ms)
         if self.max_distance == -1:
             return
@@ -73,7 +73,7 @@ class GuidedBullet(Bullet):
         self.prev_targets = []
         self.target = self.lock_target()
 
-    def update(self, dt, ms):
+    def update(self, dt, ms, *args):
         """
         Set speed before calling Bullet update method.
         Speed will be set to keep the bullet following the target.
