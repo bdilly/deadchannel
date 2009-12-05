@@ -24,12 +24,17 @@ class Music_player:
     loaded_index = -1
     loaded_track_info = None
 
-    def __init__(self, hud, volume=1.0):
+    def __init__(self, hud, volume=1.0, default_setlist=None, music_dir=None):
         """
         Initializes music playback
         """
         # Fills the playlist
-        self.playlist = glob.glob(os.path.join('music', '*.ogg'))
+        self.playlist = []
+        if default_setlist:
+            self.playlist += glob.glob(os.path.join('music', '*.ogg'))
+        if music_dir:
+            MUSIC_DIR = os.path.abspath(music_dir)
+            self.playlist += glob.glob(os.path.join(MUSIC_DIR, '*.ogg'))
         # Shuffles playlist
         random.shuffle(self.playlist)
         pygame.mixer.music.set_volume(volume)

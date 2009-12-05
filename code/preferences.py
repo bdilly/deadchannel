@@ -162,6 +162,12 @@ class Preferences:
     def get_music_volume(self):
         return float(self.get('general', 'music_volume'))
 
+    def get_default_setlist(self):
+        return self.get('general', 'use_default_setlist')
+
+    def get_music_dir(self):
+        return self.get('general', 'music_dir')
+
     fullscreen = property(get_fullscreen)
     resolution = property(get_resolution)
     key_up = property(get_key_up)
@@ -199,3 +205,5 @@ class Preferences:
     joy_id = property(get_joy_id)
     input = property(get_input)
     music_volume = property(get_music_volume)
+    default_setlist = property(get_default_setlist)
+    music_dir = property(get_music_dir)

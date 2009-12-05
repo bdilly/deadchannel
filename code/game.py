@@ -458,8 +458,9 @@ class Game:
         }
 
         # loads music player
-        self.music_player = Music_player(
-            self.hud, self.preferences.music_volume)
+        self.music_player = Music_player(self.hud,
+            self.preferences.music_volume, self.preferences.default_setlist,
+            self.preferences.music_dir)
         # loads next music
         self.music_player.load_next()
         # Starts playing music
