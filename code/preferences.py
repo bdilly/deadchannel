@@ -48,55 +48,55 @@ class Preferences:
             return self.default_conf.get(section, option)
         return self.conf.get(section, option)
 
-    def get_resolution(self):
+    def get_screen_resolution(self):
         res = self.get('screen', 'resolution')
         res  = res .lower()
         res = res.split("x")
         return [ int(res[0]), int(res[1])]
 
-    def get_fullscreen(self):
+    def get_screen_fullscreen(self):
         return self.get('screen', 'fullscreen')
 
-    def get_key_up(self):
+    def get_keyboard_up(self):
         return int(self.get('keyboard', 'up'))
 
-    def get_key_down(self):
+    def get_keyboard_down(self):
         return int(self.get('keyboard', 'down'))
 
-    def get_key_right(self):
+    def get_keyboard_right(self):
         return int(self.get('keyboard', 'right'))
 
-    def get_key_left(self):
+    def get_keyboard_left(self):
         return int(self.get('keyboard', 'left'))
 
-    def get_key_fire(self):
+    def get_keyboard_fire(self):
         return int(self.get('keyboard', 'fire'))
 
-    def get_key_secondary_fire(self):
+    def get_keyboard_secondary_fire(self):
         return int(self.get('keyboard', 'secondary_fire'))
 
-    def get_key_rot_clock(self):
+    def get_keyboard_rot_clock(self):
         return int(self.get('keyboard', 'rot_clock'))
 
-    def get_key_rot_anti_clock(self):
+    def get_keyboard_rot_anti_clock(self):
         return int(self.get('keyboard', 'rot_anti_clock'))
 
-    def get_key_player_play(self):
+    def get_keyboard_player_play(self):
         return int(self.get('keyboard', 'player_play'))
 
-    def get_key_player_stop(self):
+    def get_keyboard_player_stop(self):
         return int(self.get('keyboard', 'player_stop'))
 
-    def get_key_player_next_track(self):
+    def get_keyboard_player_next_track(self):
         return int(self.get('keyboard', 'player_next_track'))
 
-    def get_key_prev_secondary_weapon(self):
+    def get_keyboard_prev_secondary_weapon(self):
         return int(self.get('keyboard', 'prev_secondary_weapon'))
 
-    def get_key_next_secondary_weapon(self):
+    def get_keyboard_next_secondary_weapon(self):
         return int(self.get('keyboard', 'next_secondary_weapon'))
 
-    def get_key_toogle_fullscreen(self):
+    def get_keyboard_toogle_fullscreen(self):
         return int(self.get('keyboard', 'toogle_fullscreen'))
 
     def get_mouse_sensitivity(self):
@@ -114,92 +114,92 @@ class Preferences:
     def get_mouse_next_secondary_weapon(self):
         return int(self.get('mouse', 'next_secondary_weapon'))
 
-    def get_joy_axis_x(self):
+    def get_joystick_axis_x(self):
         return int(self.get('joystick', 'axis_x'))
 
-    def get_joy_axis_y(self):
+    def get_joystick_axis_y(self):
         return int(self.get('joystick', 'axis_y'))
 
-    def get_joy_axis_z(self):
+    def get_joystick_axis_z(self):
         return int(self.get('joystick', 'axis_z'))
 
-    def get_joy_fire(self):
+    def get_joystick_fire(self):
         return int(self.get('joystick', 'fire'))
 
-    def get_joy_secondary_fire(self):
+    def get_joystick_secondary_fire(self):
         return int(self.get('joystick', 'secondary_fire'))
 
-    def get_joy_rot_clock(self):
+    def get_joystick_rot_clock(self):
         return int(self.get('joystick', 'rot_clock'))
 
-    def get_joy_rot_anti_clock(self):
+    def get_joystick_rot_anti_clock(self):
         return int(self.get('joystick', 'rot_anti_clock'))
 
-    def get_joy_player_play(self):
+    def get_joystick_player_play(self):
         return int(self.get('joystick', 'player_play'))
 
-    def get_joy_player_stop(self):
+    def get_joystick_player_stop(self):
         return int(self.get('joystick', 'player_stop'))
 
-    def get_joy_player_next_track(self):
+    def get_joystick_player_next_track(self):
         return int(self.get('joystick', 'player_next_track'))
 
-    def get_joy_prev_secondary_weapon(self):
+    def get_joystick_prev_secondary_weapon(self):
         return int(self.get('joystick', 'prev_secondary_weapon'))
 
-    def get_joy_next_secondary_weapon(self):
+    def get_joystick_next_secondary_weapon(self):
         return int(self.get('joystick', 'next_secondary_weapon'))
 
-    def get_joy_sensitivity(self):
+    def get_joystick_sensitivity(self):
         return float(self.get('joystick', 'sensitivity'))
 
-    def get_joy_deadzone(self):
+    def get_joystick_deadzone(self):
         return float(self.get('joystick', 'deadzone'))
 
-    def get_joy_id(self):
+    def get_joystick_id(self):
         return int(self.get('joystick', 'id'))
 
-    def get_input(self):
+    def get_general_input(self):
         return self.get('general', 'input')
 
-    def get_music_volume(self):
+    def get_general_music_volume(self):
         return float(self.get('general', 'music_volume'))
 
-    fullscreen = property(get_fullscreen)
-    resolution = property(get_resolution)
-    key_up = property(get_key_up)
-    key_down = property(get_key_down)
-    key_right = property(get_key_right)
-    key_left = property(get_key_left)
-    key_fire = property(get_key_fire)
-    key_secondary_fire = property(get_key_secondary_fire)
-    key_rot_clock = property(get_key_rot_clock)
-    key_rot_anti_clock = property(get_key_rot_anti_clock)
-    key_player_play = property(get_key_player_play)
-    key_player_stop = property(get_key_player_stop)
-    key_player_next_track = property(get_key_player_next_track)
-    key_prev_secondary_weapon = property(get_key_prev_secondary_weapon)
-    key_next_secondary_weapon = property(get_key_next_secondary_weapon)
-    key_toogle_fullscreen = property(get_key_toogle_fullscreen)
+    screen_fullscreen = property(get_screen_fullscreen)
+    screen_resolution = property(get_screen_resolution)
+    keyboard_up = property(get_keyboard_up)
+    keyboard_down = property(get_keyboard_down)
+    keyboard_right = property(get_keyboard_right)
+    keyboard_left = property(get_keyboard_left)
+    keyboard_fire = property(get_keyboard_fire)
+    keyboard_secondary_fire = property(get_keyboard_secondary_fire)
+    keyboard_rot_clock = property(get_keyboard_rot_clock)
+    keyboard_rot_anti_clock = property(get_keyboard_rot_anti_clock)
+    keyboard_player_play = property(get_keyboard_player_play)
+    keyboard_player_stop = property(get_keyboard_player_stop)
+    keyboard_player_next_track = property(get_keyboard_player_next_track)
+    keyboard_prev_secondary_weapon = property(get_keyboard_prev_secondary_weapon)
+    keyboard_next_secondary_weapon = property(get_keyboard_next_secondary_weapon)
+    keyboard_toogle_fullscreen = property(get_keyboard_toogle_fullscreen)
     mouse_sensitivity = property(get_mouse_sensitivity)
     mouse_fire = property(get_mouse_fire)
     mouse_secondary_fire = property(get_mouse_secondary_fire)
     mouse_prev_secondary_weapon = property(get_mouse_prev_secondary_weapon)
     mouse_next_secondary_weapon = property(get_mouse_next_secondary_weapon)
-    j_axis_x = property(get_joy_axis_x)
-    j_axis_y = property(get_joy_axis_y)
-    j_axis_z = property(get_joy_axis_z)
-    j_bt_fire = property(get_joy_fire)
-    j_bt_secondary_fire = property(get_joy_secondary_fire)
-    j_bt_rot_clock = property(get_joy_rot_clock)
-    j_bt_rot_anti_clock = property(get_joy_rot_anti_clock)
-    j_bt_player_play = property(get_joy_player_play)
-    j_bt_player_stop = property(get_joy_player_stop)
-    j_bt_player_next_track = property(get_joy_player_next_track)
-    j_bt_prev_secondary_weapon = property(get_joy_prev_secondary_weapon)
-    j_bt_next_secondary_weapon = property(get_joy_next_secondary_weapon)
-    joy_sensitivity = property(get_joy_sensitivity)
-    joy_deadzone = property(get_joy_deadzone)
-    joy_id = property(get_joy_id)
-    input = property(get_input)
-    music_volume = property(get_music_volume)
+    joystick_axis_x = property(get_joystick_axis_x)
+    joystick_axis_y = property(get_joystick_axis_y)
+    joystick_axis_z = property(get_joystick_axis_z)
+    joystick_fire = property(get_joystick_fire)
+    joystick_secondary_fire = property(get_joystick_secondary_fire)
+    joystick_rot_clock = property(get_joystick_rot_clock)
+    joystick_rot_anti_clock = property(get_joystick_rot_anti_clock)
+    joystick_player_play = property(get_joystick_player_play)
+    joystick_player_stop = property(get_joystick_player_stop)
+    joystick_player_next_track = property(get_joystick_player_next_track)
+    joystick_prev_secondary_weapon = property(get_joystick_prev_secondary_weapon)
+    joystick_next_secondary_weapon = property(get_joystick_next_secondary_weapon)
+    joystick_sensitivity = property(get_joystick_sensitivity)
+    joystick_deadzone = property(get_joystick_deadzone)
+    joystick_id = property(get_joystick_id)
+    general_input = property(get_general_input)
+    general_music_volume = property(get_general_music_volume)
