@@ -34,6 +34,7 @@ class Game:
     run = True
     actors_list = None
     player = None
+    player_firing = False
     rot_accel = 2
 
     def __init__(self, preferences):
@@ -108,6 +109,7 @@ class Game:
         """
         player = self.player
         preferences = self.preferences
+        player_fire = False
 
         for event in pygame.event.get():
             type = event.type
@@ -166,8 +168,8 @@ class Game:
                 if preferences.input == "keyboard":
                     if type == KEYDOWN:
                         if key == preferences.key_fire:
-                            player.fire(self.actors_list["fire"],
-                                        self.image_player_fire["fire"])
+                            player_fire = True
+                            self.player_firing = True
                         elif key == preferences.key_secondary_fire:
                             sw = player.get_selected_secondary_weapon()
                             if sw == None:
@@ -184,13 +186,15 @@ class Game:
                             player.rotate_clock(-self.rot_accel)
                         elif key == preferences.key_rot_anti_clock:
                             player.rotate_clock(self.rot_accel)
+                        elif key == preferences.key_fire:
+                            self.player_firing = False
 
                 elif preferences.input == "mouse":
                     if type == MOUSEBUTTONDOWN:
                         # mouse left button is 1, middle is 2, and right is 3
                         if button == preferences.mouse_fire:
-                            player.fire(self.actors_list["fire"],
-                                        self.image_player_fire["fire"])
+                            player_fire = True
+                            self.player_firing = True
                         elif button == preferences.mouse_secondary_fire:
                             sw = player.get_selected_secondary_weapon()
                             if sw == None:
@@ -202,6 +206,9 @@ class Game:
                             player.prev_secondary_weapon()
                         elif button == preferences.mouse_next_secondary_weapon:
                             player.next_secondary_weapon()
+                    elif type == MOUSEBUTTONUP:
+                        if button == preferences.mouse_fire:
+                            self.player_firing = False
                     elif type == MOUSEMOTION:
                         # rel is a tuple with x and y relative movements
                         # if player move the cursor down or left, it has
@@ -221,8 +228,8 @@ class Game:
                                        "joystick_d-pad"):
                 if type == JOYBUTTONDOWN and joy_id == preferences.joy_id:
                     if button == preferences.j_bt_fire:
-                        player.fire(self.actors_list["fire"],
-                                    self.image_player_fire["fire"])
+                        player_fire = True
+                        self.player_firing = True
                     elif button == preferences.j_bt_secondary_fire:
                         sw = player.get_selected_secondary_weapon()
                         if sw == None:
@@ -240,6 +247,9 @@ class Game:
                         player.prev_secondary_weapon()
                     elif button == preferences.j_bt_next_secondary_weapon:
                         player.next_secondary_weapon()
+                elif type == JOYBUTTONUP and joy_id == preferences.joy_id:
+                    if button == preferences.j_bt_fire:
+                        self.player_firing = False
 
                 if preferences.input == "joystick_analogic":
                     if type == JOYAXISMOTION and joy_id == preferences.joy_id:
@@ -277,6 +287,10 @@ class Game:
                                 player.rotate_clock(-self.rot_accel)
                         elif button == preferences.j_bt_rot_anti_clock:
                                 player.rotate_clock(self.rot_accel)
+
+        if player_fire or self.player_firing:
+            player.fire(self.actors_list["fire"],
+                        self.image_player_fire["fire"])
 
     def actors_update(self, dt, ms):
         """
