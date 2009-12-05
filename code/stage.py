@@ -4,6 +4,7 @@
 #----------------------------------------------------------------------
 # Author:
 #   João Corrêa <joao@livewire.com.br>
+#   Bruno Dilly <bruno.dilly@brunodilly.org>
 #
 # Copyright (C) 2009 João Corrêa
 #
@@ -20,66 +21,54 @@ class Callable:
 
 class Item:
     def __init__(self, node):
-        self.type = node.getElementsByTagName("type")[0].childNodes[0].nodeValue
-        self.cc = int(node.getElementsByTagName("cc")[0].childNodes[0].nodeValue)
+        for tag in ['type', 'cc']:
+            setattr(self, tag, self.get_element(tag, node))
+
+    def get_element(self, tag, node):
+        return node.getElementsByTagName(tag)[0].childNodes[0].nodeValue
 
 class Backg(Item):
     def __init__(self, node):
         Item.__init__(self, node)
-        self.image = node.getElementsByTagName("image")[0].childNodes[0].nodeValue
-        self.layer = node.getElementsByTagName("layer")[0].childNodes[0].nodeValue
+        for tag in ['image', 'layer']:
+            setattr(self, tag, self.get_element(tag, node))
 
 class Enemy(Item):
     def __init__(self, node):
         Item.__init__(self, node)
-        self.pos_x = node.getElementsByTagName("pos_x")[0].childNodes[0].nodeValue
-        self.pos_y = node.getElementsByTagName("pos_y")[0].childNodes[0].nodeValue
-        self.behaviour = node.getElementsByTagName("behaviour")[0].childNodes[0].nodeValue
-        self.life = node.getElementsByTagName("life")[0].childNodes[0].nodeValue
-        self.image = node.getElementsByTagName("image")[0].childNodes[0].nodeValue
-        self.speed = node.getElementsByTagName("speed")[0].childNodes[0].nodeValue
+        for tag in ['pos_x', 'pos_y', 'behaviour', 'life', 'image', 'speed']:
+            setattr(self, tag, self.get_element(tag, node))
 
 class Sw(Item):
     def __init__(self, node):
         Item.__init__(self, node)
-        self.pos_x = node.getElementsByTagName("pos_x")[0].childNodes[0].nodeValue
-        self.pos_y = node.getElementsByTagName("pos_y")[0].childNodes[0].nodeValue
-        self.speed_x = node.getElementsByTagName("speed_y")[0].childNodes[0].nodeValue
-        self.speed_y = node.getElementsByTagName("speed_x")[0].childNodes[0].nodeValue
-        self.name = node.getElementsByTagName("name")[0].childNodes[0].nodeValue
-        self.ammo = node.getElementsByTagName("ammo")[0].childNodes[0].nodeValue
-        self.max_ammo = node.getElementsByTagName("max_ammo")[0].childNodes[0].nodeValue
-        self.cooldown = node.getElementsByTagName("cooldown")[0].childNodes[0].nodeValue
-        self.heating = node.getElementsByTagName("heating")[0].childNodes[0].nodeValue
-        self.time = node.getElementsByTagName("time")[0].childNodes[0].nodeValue
+        for tag in ['pos_x', 'pos_y', 'speed_x', 'speed_y', 'name', 'ammo',
+                    'max_ammo', 'cooldown', 'heating', 'time']:
+            setattr(self, tag, self.get_element(tag, node))
 
 class Mult(Sw):
     def __init__(self, node):
         Sw.__init__(self, node)
-        self.special1 = node.getElementsByTagName("special1")[0].childNodes[0].nodeValue
-        self.special2 = node.getElementsByTagName("special2")[0].childNodes[0].nodeValue
+        for tag in ['special1', 'special2']:
+            setattr(self, tag, self.get_element(tag, node))
 
 class Frag(Sw):
     def __init__(self, node):
         Sw.__init__(self, node)
-        self.special1 = node.getElementsByTagName("special1")[0].childNodes[0].nodeValue
-        self.max_charge = node.getElementsByTagName("max_charge")[0].childNodes[0].nodeValue 
+        for tag in ['special1', 'max_charge']:
+            setattr(self, tag, self.get_element(tag, node))
 
 class Guided(Sw):
     def __init__(self, node):
         Sw.__init__(self, node)
-        self.special1 = node.getElementsByTagName("special1")[0].childNodes[0].nodeValue
-        self.special2 = node.getElementsByTagName("special2")[0].childNodes[0].nodeValue
+        for tag in ['special1', 'special2']:
+            setattr(self, tag, self.get_element(tag, node))
 
 class FirstAidKit(Item):
     def __init__(self, node):
         Item.__init__(self, node)
-        self.pos_x = node.getElementsByTagName("pos_x")[0].childNodes[0].nodeValue
-        self.pos_y = node.getElementsByTagName("pos_y")[0].childNodes[0].nodeValue
-        self.speed_x = node.getElementsByTagName("speed_x")[0].childNodes[0].nodeValue
-        self.speed_y = node.getElementsByTagName("speed_y")[0].childNodes[0].nodeValue
-        self.life = node.getElementsByTagName("life")[0].childNodes[0].nodeValue
-        self.time = node.getElementsByTagName("time")[0].childNodes[0].nodeValue
+        for tag in ['pos_x', 'pos_y', 'speed_x', 'speed_y', 'life', 'time']:
+            setattr(self, tag, self.get_element(tag, node))
 
 class Stage:
     L = list()
@@ -134,4 +123,4 @@ class Stage:
             self.include(item)
         #below is some black magic I'm not sure how to deal with... but works
         #taken from stackoverflow.org
-        self.L.sort(key=lambda item: item.cc, reverse=True)
+        self.L.sort(key=lambda item: int(item.cc), reverse=True)
