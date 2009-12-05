@@ -402,14 +402,15 @@ class Game:
         for element in L:
             if element.type == "enemy":
                 # FIX: Create enemies and itens similarly (create a generic class)
-                enemy = Enemy([0, 0], element.rot, element.life, element.behaviour,
-                              element.rotspeed, self.image_enemy)
+                enemy = Enemy([0, 0], 0, element.life, element.behaviour,
+                              0, self.image_enemy)
                 size = enemy.get_size()
                 y = Random.randint(size[1] / 2, self.screen_size[1] - size[1] / 2)
                 pos = [self.screen_size[0] + size[0] / 2, y]
                 enemy.set_pos(pos)
                 # add sprite to group
                 self.actors_list["enemies"].add(enemy)
+                print("enemy")
             elif element.type in ["first_aid_kit", "sw_mult", "sw_frag",
                                   "sw_guided"]:
                 powerup = PowerUp([0,0], element.life,
@@ -421,6 +422,7 @@ class Game:
                 pos = [self.screen_size[0] + size[0] / 2, y]
                 powerup.set_pos(pos)
                 self.actors_list["powerups"].add(powerup)
+                print(element.type)
             elif element.type == "background":
                 self.background.nextTile(element.image)
                 print "backgs"
