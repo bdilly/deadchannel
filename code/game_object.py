@@ -40,7 +40,7 @@ class GameObject(pygame.sprite.Sprite):
         self.set_speed(speed or (0,0))
         self.set_rotation_speed(rotation_speed)
 
-    def update(self, dt, ms):
+    def update(self, dt, ms, *args):
         """
         Updates the position and rotation angle and destroy the object
         if it's out of the screen

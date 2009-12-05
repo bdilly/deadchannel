@@ -313,8 +313,10 @@ class Game:
         """
         self.background.update(dt)
 
+        x, y = self.player.get_pos()
+
         for actor in self.actors_list.values():
-            actor.update(dt, ms)
+            actor.update(dt, ms, self.counter, x, y)
 
         self.hud.update(self.screen, ms)
 
@@ -386,7 +388,7 @@ class Game:
         # increase xp based on hits
         self.player.set_xp(self.player.get_xp() + len(hitted))
 
-    def manage_elements(self, stage, counter):
+    def manage_elements(self, stage):
         """
         Creates enemies and itens based on the xml parsed file
         """
@@ -400,7 +402,7 @@ class Game:
                 self.ticks = 0
 
         # creates enemies based on xml file
-        L = stage.pop(counter)
+        L = stage.pop(self.counter)
         for element in L:
             if element.type == "enemy":
                 # FIX: Create enemies and itens similarly (create a generic class)
@@ -437,7 +439,7 @@ class Game:
         # loads stage configuration
         stage = Stage("stage1.xml")
         stage.buildStage()
-        counter = 0
+        self.counter = 0
 
         # creates the background
         self.background = Background("tile.png")
@@ -480,10 +482,10 @@ class Game:
             self.actors_act()
 
             # create enemies based on xml file
-            self.manage_elements(stage, counter)
+            self.manage_elements(stage)
 
             # draw the elements to the back buffer
             self.actors_draw()
             # flip the front and back buffer
             pygame.display.flip()
-            counter += 1
+            self.counter += 1

@@ -26,7 +26,7 @@ class PowerUp(GameObject):
         self.special = special
         self.set_life_time(life_time)
 
-    def update(self, dt, ms):
+    def update(self, dt, ms, *args):
         """
         Overrides GameObject update
         """

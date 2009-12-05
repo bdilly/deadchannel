@@ -14,18 +14,18 @@
     <speed>0</speed>
     <life>1</life>
     <image>none</image>
-    <behaviour>normal</behaviour>
+    <behaviour>zigzag</behaviour>
     <special>0</special>
 </item>
 <item>
     <type>enemy</type>
-    <cc>120</cc>
+    <cc>200</cc>
     <pos_x>0</pos_x>
     <pos_y>30</pos_y>
     <speed>0</speed>
     <life>1</life>
     <image>none</image>
-    <behaviour>normal</behaviour>
+    <behaviour>seeker</behaviour>
     <special>0</special>
 </item>
 <item>

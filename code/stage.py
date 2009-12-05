@@ -106,10 +106,6 @@ class Stage:
         while nextx == position:
             subList.append(self.L.pop())
             nextx = self.getNextX()
-            print(len(subList))
-            print(len(self.L))
-            print(position)
-            print(nextx)
         return subList
 
     def buildStage(self):
