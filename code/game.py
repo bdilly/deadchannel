@@ -157,6 +157,8 @@ class Game:
                         player.prev_secondary_weapon()
                     elif key == preferences.key_next_secondary_weapon:
                         player.next_secondary_weapon()
+                    elif key == preferences.key_toogle_fullscreen:
+                        pygame.display.toggle_fullscreen()
                 elif type == KEYUP:
                     if key == preferences.key_down:
                         player.accel_top()

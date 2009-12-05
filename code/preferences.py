@@ -96,6 +96,9 @@ class Preferences:
     def get_key_next_secondary_weapon(self):
         return int(self.get('keyboard', 'next_secondary_weapon'))
 
+    def get_key_toogle_fullscreen(self):
+        return int(self.get('keyboard', 'toogle_fullscreen'))
+
     def get_mouse_sensitivity(self):
         return float(self.get('mouse', 'sensitivity'))
 
@@ -177,6 +180,7 @@ class Preferences:
     key_player_next_track = property(get_key_player_next_track)
     key_prev_secondary_weapon = property(get_key_prev_secondary_weapon)
     key_next_secondary_weapon = property(get_key_next_secondary_weapon)
+    key_toogle_fullscreen = property(get_key_toogle_fullscreen)
     mouse_sensitivity = property(get_mouse_sensitivity)
     mouse_fire = property(get_mouse_fire)
     mouse_secondary_fire = property(get_mouse_secondary_fire)
