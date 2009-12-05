@@ -98,7 +98,7 @@ class HUD:
             date = ""
 
         text0 = "%s by %s"  % (title, artist)
-        text1 = "%s %s"   % (album, date)Thiago Borges Abdnur <bolaum@gmail.com>
+        text1 = "%s %s"   % (album, date)
         # print "Rendering track info: %s" % text
         self.font.set_bold(True)
         image_track_ln0 = self.font.render(text0, True, fcolor)
