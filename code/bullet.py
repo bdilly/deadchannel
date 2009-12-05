@@ -40,6 +40,9 @@ class Bullet(GameObject):
     def at_max_distance(self):
         self.kill()
 
+    def do_collision(self):
+        self.kill()
+
 
 class FragmentaryBullet(Bullet):
     def __init__(self, position, speed=None, rotation=0, rotation_speed=0,
@@ -67,6 +70,7 @@ class GuidedBullet(Bullet):
                         rotation_speed=rotation_speed, image=image,
                         list=list, distance=distance)
         self.enemy_list = enemy_list
+        self.prev_targets = []
         self.target = self.lock_target()
 
     def update(self, dt, ms):
@@ -101,11 +105,14 @@ class GuidedBullet(Bullet):
         target = None
         min_distance = sys.maxint
         for enemy in self.enemy_list:
+            if enemy in self.prev_targets:
+                continue
             distance = self.get_enemy_distance(enemy)
             distance = abs(distance[0]) + abs(distance[1])
             if distance < min_distance:
                 min_distance = distance
                 target = enemy
+        self.prev_targets.append(target)
         return target
 
     def get_enemy_distance(self, enemy):
@@ -116,3 +123,20 @@ class GuidedBullet(Bullet):
         t_pos = enemy.get_pos()
         d = [t_pos[0] - pos[0], t_pos[1] - pos[1]]
         return d
+
+class EletricBullet(GuidedBullet):
+    hits = 0
+    max_hits = 2
+#    def __init__(self, position, speed=None, rotation=0, rotation_speed=0,
+#                 image=None, list=None, distance = -1, enemy_list = None):
+#
+#        GuidedBullet.__init__(self, position, speed, rotation, rotation_speed,
+#                              image, list, distance, enemy_list)
+#        self.hits = 0
+#        self.max_hits = 2
+
+    def do_collision(self):
+        self.hits += 1
+        self.lock_target()
+        if self.hits == self.max_hits:
+            self.kill()

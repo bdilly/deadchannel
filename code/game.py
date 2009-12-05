@@ -98,10 +98,11 @@ class Game:
         self.image_enemy_fire = self.load_image("enemy_fire.png")
         self.image_life = self.load_image("life.png")
         self.image_powerup = {}
-        for image in ["first_aid_kit", "sw_mult", "sw_frag", "sw_guided"]:
+        for image in ["first_aid_kit", "sw_mult", "sw_frag", "sw_guided",
+                      "sw_elet"]:
             self.image_powerup[image] = self.load_image(image+".png")
         self.image_player_fire = {}
-        for image in ["fire", "sw_mult", "sw_frag", "sw_guided"]:
+        for image in ["fire", "sw_mult", "sw_frag", "sw_guided", "sw_elet"]:
             self.image_player_fire[image] = self.load_image("player_"+image+".png")
 
     def handle_events(self, ms):
@@ -337,10 +338,12 @@ class Game:
         """
         # check if the actor is instance of a group of sprites
         if isinstance(actor, pygame.sprite.RenderPlain):
-            hitted = pygame.sprite.groupcollide(actor, actors_list, 1, 0)
+            hitted = pygame.sprite.groupcollide(actor, actors_list, 0, 0)
             for v in hitted.values():
                 for o in v:
                     action(o)
+            for o in hitted.keys():
+                o.do_collision()
             return hitted
 
         # check if the actor is a sprite
@@ -413,7 +416,7 @@ class Game:
                 # add sprite to group
                 self.actors_list["enemies"].add(enemy)
             elif element.type in ["first_aid_kit", "sw_mult", "sw_frag",
-                                  "sw_guided"]:
+                                  "sw_guided", "sw_elet"]:
                 powerup = PowerUp([0,0], int(element.time),
                                   [int(element.speed_x), int(element.speed_y)],
                                   element.type, element.pu_attr,

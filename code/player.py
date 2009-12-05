@@ -12,7 +12,7 @@
 
 import math
 from actor import Actor
-from bullet import Bullet, FragmentaryBullet, GuidedBullet
+from bullet import Bullet, FragmentaryBullet, GuidedBullet, EletricBullet
 from secondary_weapon import SecondaryWeapon, MultipleShotWeapon, \
                              FragmentaryGrenade
 
@@ -140,6 +140,12 @@ class Player(Actor):
                     return
                 GuidedBullet(pos, [x, y], image = image, list = fire_list,
                              enemy_list = enemy_list)
+            elif weapon.type == "sw_elet":
+                if not weapon.decrease_ammo(1):
+                    self.drop_secondary_weapon(weapon)
+                    return
+                EletricBullet(pos, [x, y], image = image, list = fire_list,
+                              enemy_list = enemy_list)
 
     def get_powerup(self, type, special):
         """

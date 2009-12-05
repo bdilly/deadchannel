@@ -99,6 +99,22 @@
     <simultaneous_shoots>10</simultaneous_shoots>
 </item>
 <item>
+    <type>sw_elet</type>
+    <cc>540</cc>
+    <pos_x>0</pos_x>
+    <pos_y>10</pos_y>
+    <speed_x>-3</speed_x>
+    <speed_y>0</speed_y>
+    <name>Eletrical</name>
+    <ammo>100</ammo>
+    <max_ammo>100</max_ammo>
+    <distance>1000</distance>
+    <cooldown>400</cooldown>
+    <heating>300</heating>
+    <max_charge>300</max_charge>
+    <time>5000</time>
+</item>
+<item>
     <type>sw_mult</type>
     <cc>580</cc>
     <pos_x>0</pos_x>
@@ -228,6 +244,39 @@
     <pos_y>30</pos_y>
     <speed>0</speed>
     <life>1</life>
+    <image>none</image>
+    <behaviour>normal</behaviour>
+    <special>0</special>
+</item>
+<item>
+    <type>enemy</type>
+    <cc>2010</cc>
+    <pos_x>0</pos_x>
+    <pos_y>30</pos_y>
+    <speed>0</speed>
+    <life>1</life>
+    <image>none</image>
+    <behaviour>normal</behaviour>
+    <special>0</special>
+</item>
+<item>
+    <type>enemy</type>
+    <cc>2020</cc>
+    <pos_x>0</pos_x>
+    <pos_y>30</pos_y>
+    <speed>0</speed>
+    <life>1</life>
+    <image>none</image>
+    <behaviour>normal</behaviour>
+    <special>0</special>
+</item>
+<item>
+    <type>enemy</type>
+    <cc>2030</cc>
+    <pos_x>0</pos_x>
+    <pos_y>30</pos_y>
+    <speed>0</speed>
+    <life>3</life>
     <image>none</image>
     <behaviour>normal</behaviour>
     <special>0</special>

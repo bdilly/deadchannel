@@ -109,7 +109,7 @@ class Stage:
                 item = Mult(node)
             elif type == "sw_frag":
                 item = Frag(node)
-            elif type == "sw_guided":
+            elif type in ["sw_guided", "sw_elet"]:
                 item = Sw(node)
             elif type == "first_aid_kit":
                 item = FirstAidKit(node)
