@@ -29,20 +29,18 @@ class Enemy(Actor):
         Creates an enemy character that could has one of the following
         behaves: normal, fast, or diagonal.
         """
+        
+        self.speed_list =  {"normal":[-4,0], 
+                            "fast":[-7,0], 
+                            "diagonal":[-3,1], 
+                            "seeker":[-3,1], 
+                            "zigzag":[-3,1]
+                            }
 
         self.counter = 1
         self.orientation = True
         self.behaviour = behaviour
-        if behaviour == "normal":
-            speed = [-4, 0]
-        elif behaviour == "fast":
-            speed = [-7, 0]
-        elif behaviour == "diagonal":
-            speed = [-3, 1]
-        elif behaviour == "seeker":
-            speed = [-3, 1]
-        elif behaviour == "zigzag":
-            speed = [-3, 1]
+        speed = self.speed_list[behaviour]
 
         Actor.__init__(self, position, rotation, life, speed,
                        rotation_speed, image)
