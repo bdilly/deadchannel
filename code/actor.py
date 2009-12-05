@@ -24,7 +24,7 @@ class Actor(GameObject):
         """
         GameObject.__init__(self, image, position, rotation, speed,
                             rotation_speed)
-        self.set_life(life)
+        self.life = life
         self.set_accel([3, 3])
 
     def get_life(self):

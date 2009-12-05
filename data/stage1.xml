@@ -46,10 +46,11 @@
     <max_ammo>100</max_ammo>
     <cooldown>400</cooldown>
     <heating>300</heating>
+    <distance>500</distance>
     <max_charge>300</max_charge>
     <time>60</time>
-    <special1>30</special1>
-    <special2>30</special2>
+    <radius>60</radius>
+    <simultaneous_shoots>3</simultaneous_shoots>
     <special>Stuck Duck, 20, 100, 400, 300, 300, 0, 60, 3</special>
 </item>
 <item>
@@ -73,12 +74,11 @@
     <ammo>10</ammo>
     <max_ammo>10</max_ammo>
     <cooldown>450</cooldown>
-    <heating>600</heating>
+    <heating>450</heating>
+    <distance>500</distance>
     <max_charge>1000</max_charge>
-    <time>60</time>
-    <special1>1000</special1>
-    <special2>40</special2>
-    <special>Last Kiss, 10, 10, 450, 600, 600, 1000, 4</special>
+    <time>6000</time>
+    <fragments>4</fragments>
 </item>
 <item>
     <type>sw_mult</type>
@@ -90,12 +90,13 @@
     <name>Psycho Killah!</name>
     <ammo>100</ammo>
     <max_ammo>100</max_ammo>
+    <distance>500</distance>
     <cooldown>400</cooldown>
     <heating>300</heating>
     <max_charge>300</max_charge>
-    <time>60</time>
-    <special1>360</special1>
-    <special2>10</special2>
+    <time>5000</time>
+    <radius>360</radius>
+    <simultaneous_shoots>10</simultaneous_shoots>
 </item>
 <item>
     <type>sw_mult</type>
@@ -108,11 +109,12 @@
     <ammo>20</ammo>
     <max_ammo>100</max_ammo>
     <cooldown>400</cooldown>
+    <distance>500</distance>
     <heating>300</heating>
     <max_charge>300</max_charge>
-    <time>60</time>
-    <special1>360</special1>
-    <special2>10</special2>
+    <time>4500</time>
+    <radius>360</radius>
+    <simultaneous_shoots>10</simultaneous_shoots>
 </item>
 <item>
     <type>sw_guided</type>
@@ -124,12 +126,11 @@
     <name>Seeeeeeek... Seek and Destroy!</name>
     <ammo>40</ammo>
     <max_ammo>50</max_ammo>
-    <cooldown>150</cooldown>
-    <heating>900</heating>
+    <distance>500</distance>
+    <cooldown>900</cooldown>
+    <heating>150</heating>
     <max_charge>300</max_charge>
-    <time>60</time>
-    <special1>30</special1>
-    <special2>30</special2>
+    <time>7000</time>
 </item>
 <item>
     <type>enemy</type>

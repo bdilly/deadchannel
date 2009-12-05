@@ -39,36 +39,37 @@ class Enemy(Item):
         for tag in ['pos_x', 'pos_y', 'behaviour', 'life', 'image', 'speed']:
             setattr(self, tag, self.get_element(tag, node))
 
-class Sw(Item):
+class PU(Item):
     def __init__(self, node):
         Item.__init__(self, node)
-        for tag in ['pos_x', 'pos_y', 'speed_x', 'speed_y', 'name', 'ammo',
-                    'max_ammo', 'cooldown', 'heating', 'time']:
+        for tag in ['pos_x', 'pos_y', 'speed_x', 'speed_y', 'time']:
             setattr(self, tag, self.get_element(tag, node))
+        self.pu_attr = {}
+
+class Sw(PU):
+    def __init__(self, node):
+        PU.__init__(self, node)
+        for tag in ['name', 'ammo', 'max_ammo', 'cooldown', 'heating',
+                    'max_charge', 'distance']:
+            self.pu_attr[tag] = self.get_element(tag, node)
 
 class Mult(Sw):
     def __init__(self, node):
         Sw.__init__(self, node)
-        for tag in ['special1', 'special2']:
-            setattr(self, tag, self.get_element(tag, node))
+        for tag in ['radius', 'simultaneous_shoots']:
+            self.pu_attr[tag] = self.get_element(tag, node)
 
 class Frag(Sw):
     def __init__(self, node):
         Sw.__init__(self, node)
-        for tag in ['special1', 'max_charge']:
-            setattr(self, tag, self.get_element(tag, node))
+        for tag in ['fragments']:
+            self.pu_attr[tag] = self.get_element(tag, node)
 
-class Guided(Sw):
+class FirstAidKit(PU):
     def __init__(self, node):
-        Sw.__init__(self, node)
-        for tag in ['special1', 'special2']:
-            setattr(self, tag, self.get_element(tag, node))
-
-class FirstAidKit(Item):
-    def __init__(self, node):
-        Item.__init__(self, node)
-        for tag in ['pos_x', 'pos_y', 'speed_x', 'speed_y', 'life', 'time']:
-            setattr(self, tag, self.get_element(tag, node))
+        PU.__init__(self, node)
+        for tag in ['life']:
+            self.pu_attr[tag] = self.get_element(tag, node)
 
 class Stage:
     L = list()
@@ -95,10 +96,6 @@ class Stage:
         while nextx == position:
             subList.append(self.L.pop())
             nextx = self.getNextX()
-            print(len(subList))
-            print(len(self.L))
-            print(position)
-            print(nextx)
         return subList
 
     def buildStage(self):
@@ -113,13 +110,9 @@ class Stage:
             elif type == "sw_frag":
                 item = Frag(node)
             elif type == "sw_guided":
-                item = Guided(node)
+                item = Sw(node)
             elif type == "first_aid_kit":
                 item = FirstAidKit(node)
-            elif type == "sw_mult":
-                item = Mult(node)
-
-            print(item.cc)
             self.include(item)
         #below is some black magic I'm not sure how to deal with... but works
         #taken from stackoverflow.org

@@ -209,5 +209,5 @@ class Preferences:
     joystick_id = property(get_joystick_id)
     general_input = property(get_general_input)
     general_music_volume = property(get_general_music_volume)
-    general_default_setlist = property(get_default_setlist)
-    general_music_dir = property(get_music_dir)
+    general_default_setlist = property(get_general_default_setlist)
+    general_music_dir = property(get_general_music_dir)

@@ -349,7 +349,7 @@ class Game:
             collided_list = pygame.sprite.spritecollide(actor, actors_list, 0)
             for obj in collided_list:
                 if isinstance(obj, PowerUp):
-                    if action(obj.get_type(), obj.get_special()):
+                    if action(obj.get_type(), obj.get_pu_attr()):
                         obj.kill()
                 else:
                     action()
@@ -404,7 +404,7 @@ class Game:
         for element in L:
             if element.type == "enemy":
                 # FIX: Create enemies and itens similarly (create a generic class)
-                enemy = Enemy([0, 0], 0, element.life, element.behaviour,
+                enemy = Enemy([0, 0], 0, int(element.life), element.behaviour,
                               0, self.image_enemy)
                 size = enemy.get_size()
                 y = Random.randint(size[1] / 2, self.screen_size[1] - size[1] / 2)
@@ -412,22 +412,19 @@ class Game:
                 enemy.set_pos(pos)
                 # add sprite to group
                 self.actors_list["enemies"].add(enemy)
-                print("enemy")
             elif element.type in ["first_aid_kit", "sw_mult", "sw_frag",
                                   "sw_guided"]:
-                powerup = PowerUp([0,0], element.life,
-                                  [element.speed_x, element.speed_y],
-                                  element.type, element.special,
+                powerup = PowerUp([0,0], int(element.time),
+                                  [int(element.speed_x), int(element.speed_y)],
+                                  element.type, element.pu_attr,
                                   self.image_powerup[element.type])
                 size = powerup.get_size()
                 y = Random.randint(size[1] / 2, self.screen_size[1] - size[1] / 2)
                 pos = [self.screen_size[0] + size[0] / 2, y]
                 powerup.set_pos(pos)
                 self.actors_list["powerups"].add(powerup)
-                print(element.type)
             elif element.type == "background":
                 self.background.nextTile(element.image)
-                print "backgs"
 
     def loop(self):
         """

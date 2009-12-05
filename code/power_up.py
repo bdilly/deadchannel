@@ -17,13 +17,13 @@ class PowerUp(GameObject):
     Base class for all power-ups
     """
     def __init__(self, position, life_time=3000, speed=[0,0], type=None,
-                 special=0, image=None):
+                 pu_attr=0, image=None):
         """
         Set position, speed, life time and image
         """
         GameObject.__init__(self, image, position, 0, speed, 0)
         self.type = type
-        self.special = special
+        self.pu_attr = pu_attr
         self.set_life_time(life_time)
 
     def update(self, dt, ms):
@@ -53,11 +53,11 @@ class PowerUp(GameObject):
         """
         return self.type
 
-    def get_special(self):
+    def get_pu_attr(self):
         """
-        Returns a list wich content depends on type.
+        Returns a dict of power up attributes wich content depends on type.
         For 'first_aid_kit' it will returns a single element, the life bonus.
         For secondary weapons this list has a name, ammunition, distance,
         and other related to each kind of sw.
         """
-        return self.special
+        return self.pu_attr

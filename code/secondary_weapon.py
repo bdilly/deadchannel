@@ -14,14 +14,14 @@ class SecondaryWeapon:
 
     def __init__(self, type, attributes):
         self.type = type
-        self.name = attributes[0]
-        self.ammo = int(attributes[1])
-        self.max_ammo = int(attributes[2])
-        self.distance = int(attributes[3])
-        self.max_cooldown = int(attributes[4])
+        self.name = attributes['name']
+        self.ammo = int(attributes['ammo'])
+        self.max_ammo = int(attributes['max_ammo'])
+        self.distance = int(attributes['distance'])
+        self.max_cooldown = int(attributes['cooldown'])
         self.cooldown = self.max_cooldown
-        self.warm = int(attributes[5])
-        self.max_charge = int(attributes[6])
+        self.warm = int(attributes['heating'])
+        self.max_charge = int(attributes['max_charge'])
 
     def get_name(self):
         return self.name
@@ -79,8 +79,8 @@ class SecondaryWeapon:
 class MultipleShotWeapon(SecondaryWeapon):
     def __init__(self, type, attributes):
         SecondaryWeapon.__init__(self, type, attributes)
-        self.radius = int(attributes[7])
-        self.simultaneous_shoots = int(attributes[8])
+        self.radius = int(attributes['radius'])
+        self.simultaneous_shoots = int(attributes['simultaneous_shoots'])
 
     def get_radius(self):
         return self.radius
@@ -91,7 +91,7 @@ class MultipleShotWeapon(SecondaryWeapon):
 class FragmentaryGrenade(SecondaryWeapon):
     def __init__(self, type, attributes):
         SecondaryWeapon.__init__(self, type, attributes)
-        self.fragments = int(attributes[7])
+        self.fragments = int(attributes['fragments'])
 
     def get_fragments(self):
         return self.fragments

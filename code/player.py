@@ -80,9 +80,12 @@ class Player(Actor):
         Set player's life if it's not more than max life or return False.
         Overrides Actor's set_life method.
         """
-        if life > self.max_life:
-            return False
-        self.life = life
+        if life >= self.max_life:
+            if self.life == self.max_life:
+                return False
+            self.life = self.max_life
+        else:
+            self.life = life
         return True
 
     def fire(self, fire_list, image, primary=True, enemy_list=None, charging=0):
@@ -144,7 +147,7 @@ class Player(Actor):
         false if he can't.
         """
         if type == "first_aid_kit":
-            return self.get_first_aid_kit(int(special[0]))
+            return self.get_first_aid_kit(int(special['life']))
         # secondary weapon
         elif "sw" in type:
             if type == "sw_mult":
