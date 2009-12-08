@@ -34,7 +34,8 @@ class Enemy(Actor):
                             "fast":[-7,0], 
                             "diagonal":[-3,1], 
                             "seeker":[-3,1], 
-                            "zigzag":[-3,1]
+                            "zigzag":[-3,-8],
+                            "zigzaglong":[-3,-8]
                             }
 
         self.counter = 1
@@ -48,6 +49,14 @@ class Enemy(Actor):
     def update(self, dt, ms, counter, x, y):
         if self.behaviour == "zigzag":
             if self.counter % 15 == 0:
+                if self.orientation == False:
+                    self.speed = [-3, -8]
+                    self.orientation = True
+                else:
+                    self.speed = [-3, 8]
+                    self.orientation = False
+        if self.behaviour == "zigzaglong":
+            if self.counter % 30 == 0:
                 if self.orientation == False:
                     self.speed = [-3, -8]
                     self.orientation = True

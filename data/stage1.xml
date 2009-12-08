@@ -10,18 +10,84 @@
     <type>enemy</type>
     <cc>100</cc>
     <pos_x>0</pos_x>
-    <pos_y>40</pos_y>
+    <pos_y>300</pos_y>
     <speed>0</speed>
     <life>1</life>
     <image>none</image>
-    <behaviour>zigzag</behaviour>
+    <behaviour>zigzaglong</behaviour>
+    <special>0</special>
+</item>
+<item>
+    <type>enemy</type>
+    <cc>150</cc>
+    <pos_x>0</pos_x>
+    <pos_y>300</pos_y>
+    <speed>0</speed>
+    <life>1</life>
+    <image>none</image>
+    <behaviour>zigzaglong</behaviour>
     <special>0</special>
 </item>
 <item>
     <type>enemy</type>
     <cc>200</cc>
     <pos_x>0</pos_x>
-    <pos_y>30</pos_y>
+    <pos_y>300</pos_y>
+    <speed>0</speed>
+    <life>1</life>
+    <image>none</image>
+    <behaviour>zigzaglong</behaviour>
+    <special>0</special>
+</item>
+<item>
+    <type>enemy</type>
+    <cc>250</cc>
+    <pos_x>0</pos_x>
+    <pos_y>300</pos_y>
+    <speed>0</speed>
+    <life>1</life>
+    <image>none</image>
+    <behaviour>zigzaglong</behaviour>
+    <special>0</special>
+</item>
+<item>
+    <type>enemy</type>
+    <cc>300</cc>
+    <pos_x>0</pos_x>
+    <pos_y>300</pos_y>
+    <speed>0</speed>
+    <life>1</life>
+    <image>none</image>
+    <behaviour>zigzaglong</behaviour>
+    <special>0</special>
+</item>
+<item>
+    <type>enemy</type>
+    <cc>350</cc>
+    <pos_x>0</pos_x>
+    <pos_y>300</pos_y>
+    <speed>0</speed>
+    <life>1</life>
+    <image>none</image>
+    <behaviour>zigzaglong</behaviour>
+    <special>0</special>
+</item>
+<item>
+    <type>enemy</type>
+    <cc>400</cc>
+    <pos_x>0</pos_x>
+    <pos_y>300</pos_y>
+    <speed>0</speed>
+    <life>1</life>
+    <image>none</image>
+    <behaviour>zigzaglong</behaviour>
+    <special>0</special>
+</item>
+<item>
+    <type>enemy</type>
+    <cc>450</cc>
+    <pos_x>0</pos_x>
+    <pos_y>300</pos_y>
     <speed>0</speed>
     <life>1</life>
     <image>none</image>
@@ -30,7 +96,7 @@
 </item>
 <item>
     <type>background</type>
-    <cc>200</cc>
+    <cc>500</cc>
     <image>tiles/stars3.jpg</image>
     <layer>1</layer>
 </item>

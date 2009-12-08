@@ -412,7 +412,10 @@ class Game:
                 enemy = Enemy([0, 0], 0, int(element.life), element.behaviour,
                               0, self.image_enemy)
                 size = enemy.get_size()
-                y = Random.randint(size[1] / 2, self.screen_size[1] - size[1] / 2)
+                # FIX: Should random y be kept like below?
+                y = int(element.pos_y)
+                if y == 0:
+                    y = Random.randint(size[1] / 2, self.screen_size[1] - size[1] / 2)
                 pos = [self.screen_size[0] + size[0] / 2, y]
                 enemy.set_pos(pos)
                 # add sprite to group
