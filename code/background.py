@@ -30,6 +30,7 @@ class Layer:
         self.L = deque()
         self.w = width * image.size[0]
         self.h = image.size[1]
+        self.back = pygame.Surface((self.w, self.h), SRCALPHA)
 
     def subLayer(self, screen):
         s = screen.get_size()
@@ -39,7 +40,7 @@ class Layer:
         self.pos[0] -= 1
 
     def build(self):
-        self.back = pygame.Surface((self.w, self.h), SRCALPHA)
+#        self.back = pygame.Surface((self.w, self.h), SRCALPHA)
         # checks if the number of images is OK
         while len(self.L) < self.width:
             self.L.append(self.default_image)
