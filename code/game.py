@@ -432,7 +432,7 @@ class Game:
                 powerup.set_pos(pos)
                 self.actors_list["powerups"].add(powerup)
             elif element.type == "background":
-                self.background.nextTile(element.image)
+                self.background.nextTile(element.image, 1)
 
     def loop(self):
         """
@@ -445,7 +445,7 @@ class Game:
         self.counter = 0
 
         # creates the background
-        self.background = Background("tile.png")
+        self.background = Background("earth.jpg", "321.png")
 
         #starts clock
         clock = pygame.time.Clock()
